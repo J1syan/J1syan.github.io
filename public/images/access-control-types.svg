@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 380" font-family="system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <style>
+      .title { fill: #0f172a; font-size: 18px; font-weight: 700; text-anchor: middle; }
+      .root { fill: #1e40af; }
+      .root-text { fill: white; font-size: 15px; font-weight: 600; text-anchor: middle; }
+      .branch { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+      .branch-text { fill: #1e40af; font-size: 13px; font-weight: 600; text-anchor: middle; }
+      .detail { fill: #f8fafc; stroke: #94a3b8; stroke-width: 1.5; }
+      .detail-text { fill: #475569; font-size: 12px; text-anchor: middle; }
+      .line { stroke: #94a3b8; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+  <text x="450" y="28" class="title">越权访问三种类型</text>
+  <rect x="370" y="50" width="160" height="40" rx="20" class="root" />
+  <text x="450" y="75" class="root-text">越权访问</text>
+  <line x1="450" y1="90" x2="150" y2="130" class="line" />
+  <line x1="450" y1="90" x2="450" y2="130" class="line" />
+  <line x1="450" y1="90" x2="750" y2="130" class="line" />
+  <rect x="70" y="130" width="160" height="36" rx="18" class="branch" />
+  <text x="150" y="153" class="branch-text">水平越权</text>
+  <rect x="370" y="130" width="160" height="36" rx="18" class="branch" />
+  <text x="450" y="153" class="branch-text">垂直越权</text>
+  <rect x="670" y="130" width="160" height="36" rx="18" class="branch" />
+  <text x="750" y="153" class="branch-text">上下文越权</text>
+  <line x1="150" y1="166" x2="150" y2="200" class="line" />
+  <rect x="50" y="200" width="200" height="34" rx="8" class="detail" />
+  <text x="150" y="221" class="detail-text">同级别用户数据互访</text>
+  <rect x="50" y="242" width="200" height="34" rx="8" class="detail" />
+  <text x="150" y="263" class="detail-text">/api/user?id=1001 改为 1002</text>
+  <line x1="450" y1="166" x2="450" y2="200" class="line" />
+  <rect x="350" y="200" width="200" height="34" rx="8" class="detail" />
+  <text x="450" y="221" class="detail-text">低权限获取高权限功能</text>
+  <rect x="350" y="242" width="200" height="34" rx="8" class="detail" />
+  <text x="450" y="263" class="detail-text">普通用户访问 /admin/deleteUser</text>
+  <line x1="750" y1="166" x2="750" y2="200" class="line" />
+  <rect x="650" y="200" width="200" height="34" rx="8" class="detail" />
+  <text x="750" y="221" class="detail-text">流程跳过 / 状态不一致</text>
+  <rect x="650" y="242" width="200" height="34" rx="8" class="detail" />
+  <text x="750" y="263" class="detail-text">跳过支付直接调用完成接口</text>
+  <rect x="310" y="310" width="280" height="28" rx="14" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5" />
+  <text x="450" y="329" fill="#dc2626" font-size="12" text-anchor="middle" font-weight="600">本质：服务端未校验请求者权限</text>
+</svg>

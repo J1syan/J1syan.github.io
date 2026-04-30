@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" font-family="system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <style>
+      .title { fill: #0f172a; font-size: 18px; font-weight: 700; text-anchor: middle; }
+      .root { fill: #1e40af; }
+      .root-text { fill: white; font-size: 15px; font-weight: 600; text-anchor: middle; }
+      .branch { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+      .branch-text { fill: #1e40af; font-size: 13px; font-weight: 600; text-anchor: middle; }
+      .detail { fill: #f8fafc; stroke: #94a3b8; stroke-width: 1.5; }
+      .detail-text { fill: #475569; font-size: 11px; text-anchor: middle; }
+      .line { stroke: #94a3b8; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+
+  <text x="450" y="28" class="title">XSS 三种类型对比</text>
+
+  <!-- Root -->
+  <rect x="370" y="50" width="160" height="40" rx="20" class="root" />
+  <text x="450" y="75" class="root-text">XSS 跨站脚本攻击</text>
+
+  <!-- Branches -->
+  <line x1="450" y1="90" x2="150" y2="140" class="line" />
+  <line x1="450" y1="90" x2="450" y2="140" class="line" />
+  <line x1="450" y1="90" x2="750" y2="140" class="line" />
+
+  <!-- 反射型 -->
+  <rect x="70" y="140" width="160" height="36" rx="18" class="branch" />
+  <text x="150" y="163" class="branch-text">反射型 XSS</text>
+
+  <!-- 存储型 -->
+  <rect x="370" y="140" width="160" height="36" rx="18" class="branch" />
+  <text x="450" y="163" class="branch-text">存储型 XSS</text>
+
+  <!-- DOM 型 -->
+  <rect x="670" y="140" width="160" height="36" rx="18" class="branch" />
+  <text x="750" y="163" class="branch-text">DOM 型 XSS</text>
+
+  <!-- Details for 反射型 -->
+  <line x1="150" y1="176" x2="150" y2="210" class="line" />
+  <rect x="50" y="210" width="200" height="34" rx="8" class="detail" />
+  <text x="150" y="231" class="detail-text">脚本不存储在服务器</text>
+  <rect x="50" y="252" width="200" height="34" rx="8" class="detail" />
+  <text x="150" y="273" class="detail-text">通过 URL 参数触发</text>
+  <rect x="50" y="294" width="200" height="34" rx="8" class="detail" />
+  <text x="150" y="315" class="detail-text">需要诱导用户点击恶意链接</text>
+  <rect x="50" y="336" width="200" height="34" rx="8" class="detail" />
+  <text x="150" y="357" class="detail-text">危害较低，不持久化</text>
+
+  <!-- Details for 存储型 -->
+  <line x1="450" y1="176" x2="450" y2="210" class="line" />
+  <rect x="350" y="210" width="200" height="34" rx="8" class="detail" />
+  <text x="450" y="231" class="detail-text">脚本存储在服务器数据库中</text>
+  <rect x="350" y="252" width="200" height="34" rx="8" class="detail" />
+  <text x="450" y="273" class="detail-text">所有访问页面的用户都会触发</text>
+  <rect x="350" y="294" width="200" height="34" rx="8" class="detail" />
+  <text x="450" y="315" class="detail-text">典型场景：评论、昵称、签名</text>
+  <rect x="350" y="336" width="200" height="34" rx="8" class="detail" />
+  <text x="450" y="357" class="detail-text">危害最高，持久化影响</text>
+
+  <!-- Details for DOM 型 -->
+  <line x1="750" y1="176" x2="750" y2="210" class="line" />
+  <rect x="650" y="210" width="200" height="34" rx="8" class="detail" />
+  <text x="750" y="231" class="detail-text">脚本不经过服务端，纯前端触发</text>
+  <rect x="650" y="252" width="200" height="34" rx="8" class="detail" />
+  <text x="750" y="273" class="detail-text">前端 JS 处理 DOM 时注入脚本</text>
+  <rect x="650" y="294" width="200" height="34" rx="8" class="detail" />
+  <text x="750" y="315" class="detail-text">典型场景：location.hash</text>
+  <rect x="650" y="336" width="200" height="34" rx="8" class="detail" />
+  <text x="750" y="357" class="detail-text">不经过服务端，防御在前端</text>
+
+  <!-- Bottom warning -->
+  <rect x="310" y="385" width="280" height="28" rx="14" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5" />
+  <text x="450" y="404" fill="#dc2626" font-size="12" text-anchor="middle" font-weight="600">存储型 XSS 危害最大，无需诱导点击</text>
+</svg>

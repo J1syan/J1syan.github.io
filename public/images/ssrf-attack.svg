@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" font-family="system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <style>
+      .title { fill: #0f172a; font-size: 18px; font-weight: 700; text-anchor: middle; }
+      .attacker { fill: #f0fdf4; stroke: #22c55e; stroke-width: 2; }
+      .attacker-text { fill: #166534; font-size: 15px; font-weight: 600; text-anchor: middle; }
+      .server { fill: #dbeafe; stroke: #3b82f6; stroke-width: 2; }
+      .server-text { fill: #1e40af; font-size: 14px; font-weight: 600; text-anchor: middle; }
+      .target { fill: #fef2f2; stroke: #ef4444; stroke-width: 1.5; }
+      .target-text { fill: #dc2626; font-size: 12px; text-anchor: middle; }
+      .arrow { stroke: #94a3b8; stroke-width: 1.5; fill: none; marker-end: url(#arrow); }
+      .arrow-bad { stroke: #ef4444; stroke-width: 2; fill: none; marker-end: url(#arrow-r); }
+    </style>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#94a3b8" />
+    </marker>
+    <marker id="arrow-r" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#ef4444" />
+    </marker>
+  </defs>
+  <text x="450" y="25" class="title">SSRF 攻击场景</text>
+  <rect x="15" y="60" width="160" height="40" rx="20" class="attacker" />
+  <text x="95" y="85" class="attacker-text">🎯 攻击者</text>
+  <rect x="350" y="60" width="180" height="40" rx="20" class="server" />
+  <text x="440" y="85" class="server-text">目标服务器</text>
+  <line x1="175" y1="80" x2="350" y2="80" class="arrow-bad" />
+  <text x="262" y="72" fill="#dc2626" font-size="11" font-weight="500">url=http://169.254.169.254</text>
+  <rect x="620" y="30" width="130" height="32" rx="8" class="target" />
+  <text x="685" y="51" class="target-text">内网服务发现</text>
+  <rect x="620" y="70" width="130" height="32" rx="8" class="target" />
+  <text x="685" y="91" class="target-text">云厂商元数据</text>
+  <rect x="620" y="110" width="130" height="32" rx="8" class="target" />
+  <text x="685" y="131" class="target-text">Redis / MySQL</text>
+  <rect x="620" y="150" width="130" height="32" rx="8" class="target" />
+  <text x="685" y="171" class="target-text">内部 API</text>
+  <line x1="530" y1="80" x2="620" y2="46" class="arrow" />
+  <line x1="530" y1="80" x2="620" y2="86" class="arrow" />
+  <line x1="530" y1="80" x2="620" y2="126" class="arrow" />
+  <line x1="530" y1="80" x2="620" y2="166" class="arrow" />
+  <text x="750" y="51" fill="#475569" font-size="11">扫描 192.168.x / 10.x 网段</text>
+  <text x="750" y="91" fill="#475569" font-size="11">AWS / 阿里云 IAM 凭证</text>
+  <text x="750" y="131" fill="#475569" font-size="11">Gopher 协议攻击 Redis</text>
+  <text x="750" y="171" fill="#475569" font-size="11">调用内部管理接口</text>
+  <text x="450" y="230" fill="#0f172a" font-size="14" font-weight="600" text-anchor="middle">SSRF 的威力：服务器能访问你访问不到的地方</text>
+  <rect x="50" y="270" width="250" height="60" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5" />
+  <text x="175" y="293" fill="#92400e" font-size="12" text-anchor="middle" font-weight="500">云环境元数据接口：</text>
+  <text x="175" y="313" fill="#92400e" font-size="11" font-family="monospace">169.254.169.254/latest/meta-data/</text>
+  <rect x="350" y="270" width="250" height="60" rx="10" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5" />
+  <text x="475" y="293" fill="#92400e" font-size="12" text-anchor="middle" font-weight="500">拿到 IAM 凭证后：</text>
+  <text x="475" y="313" fill="#92400e" font-size="11">直接操作云资源</text>
+  <rect x="650" y="270" width="220" height="60" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5" />
+  <text x="760" y="293" fill="#dc2626" font-size="12" text-anchor="middle" font-weight="500">防御方案：</text>
+  <text x="760" y="313" fill="#dc2626" font-size="11">白名单 + 禁止内网 + 禁用协议</text>
+  <rect x="250" y="360" width="400" height="28" rx="14" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5" />
+  <text x="450" y="379" fill="#dc2626" font-size="12" text-anchor="middle" font-weight="600">DNS Rebinding：先解析公网IP，请求时切换为内网IP</text>
+</svg>

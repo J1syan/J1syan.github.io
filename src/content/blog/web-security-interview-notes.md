@@ -30,21 +30,7 @@ Web 安全的核心矛盾只有一句话：
 
 #### 攻击面分析
 
-```mermaid
-graph LR
-    A["越权漏洞"] --> B["水平越权"]
-    A --> C["垂直越权"]
-    A --> D["上下文越权"]
-
-    B --> B1["同级别用户数据互访"]
-    B1 --> B2["修改用户 ID 参数\n/api/user?id=1001 改为 id=1002"]
-
-    C --> C1["低权限获取高权限功能"]
-    C1 --> C2["普通用户访问管理接口\n/admin/deleteUser"]
-
-    D --> D1["流程跳过 / 状态不一致"]
-    D1 --> D2["跳过支付步骤直接调用完成接口"]
-```
+![越权访问三种类型](/images/access-control-types.svg)
 
 #### 关键测试思路
 
@@ -95,18 +81,7 @@ public User getUserDetail(@PathVariable Long userId) {
 
 SQL 注入的本质是**数据变成了代码**。用户输入的内容被数据库当作 SQL 语法执行。
 
-```mermaid
-sequenceDiagram
-    participant A as 攻击者
-    participant W as Web 应用
-    participant D as 数据库
-
-    A->>W: GET /user?id=1' OR 1=1--
-    W->>W: 拼接 SQL: SELECT * FROM users WHERE id='1' OR 1=1--'
-    W->>D: 执行 SQL
-    D->>W: 返回所有用户数据
-    W->>A: 泄漏全部用户信息
-```
+![SQL 注入攻击时序图](/images/sql-injection-flow.svg)
 
 **注入技术的分类不是背出来的，是根据"你能看到什么"推导的：**
 
@@ -186,18 +161,7 @@ factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
 
 #### 三种类型的本质区别
 
-```mermaid
-graph TD
-    A[XSS 跨站脚本攻击] --> B{恶意脚本存在哪?}
-
-    B -->|不存在服务器中<br/>通过 URL 参数触发| C[反射型 XSS]
-    B -->|存储在服务器数据库中<br/>所有访问者都会触发| D[存储型 XSS]
-    B -->|不存在服务器中<br/>前端 JS 处理 DOM 时触发| E[DOM 型 XSS]
-
-    C --> C1["典型场景: 搜索框、URL 参数回显\n危害: 需要诱导用户点击恶意链接"]
-    D --> D1["典型场景: 评论、昵称、签名<br/>危害: 所有访问该页面的用户都会中招"]
-    E --> E1["典型场景: location.hash、innerHTML\n危害: 不经过服务端，纯前端漏洞"]
-```
+![XSS 三种类型对比](/images/xss-types.svg)
 
 **存储型 XSS 危害最大的原因**：它不需要诱导用户点击特定链接。只要用户访问了包含恶意数据的页面，脚本就会执行。如果攻击者在评论里存了一段脚本，所有看到这个评论的人都会被影响。
 
@@ -205,25 +169,7 @@ graph TD
 
 很多文章只给 Payload 列表，但不说为什么用这个。关键在于**你的输入出现在 HTML 的哪个位置**：
 
-```mermaid
-graph LR
-    A["用户输入"] --> B{"出现在哪?"}
-
-    B -->|"HTML 标签内容"| C["div 标签内容"]
-    C --> C1["Payload: script alert(1) /script"]
-
-    B -->|"HTML 属性值"| D["img src 属性"]
-    D --> D1["Payload: onerror=alert(1)"]
-
-    B -->|"JavaScript 变量"| E["script 变量赋值"]
-    E --> E1["Payload: 单引号闭合后注入"]
-
-    B -->|"URL 地址"| F["a href 属性"]
-    F --> F1["Payload: javascript:alert(1)"]
-
-    B -->|"DOM 操作目标"| G["element.innerHTML"]
-    G --> G1["Payload: img onerror 注入"]
-```
+![XSS 上下文与 Payload 构造](/images/xss-context.svg)
 
 理解了上下文，Payload 不是背出来的，是推导出来的。
 
@@ -267,21 +213,7 @@ out.write(Encode.forUriComponent(userInput));
 
 CSRF 利用的是浏览器的一个基本行为：**同源请求会自动携带 Cookie**。
 
-```mermaid
-sequenceDiagram
-    participant U as 用户浏览器
-    participant B as bank.com
-    participant E as evil.com
-
-    U->>B: 登录 bank.com
-    B->>U: Set-Cookie: session=abc123
-
-    U->>E: 访问 evil.com（正常浏览）
-    E->>U: 返回恶意页面
-    U->>B: 自动提交表单到 bank.com/transfer
-    Note over U,B: 浏览器自动携带 session=abc123
-    B->>U: 转账成功（认为是用户操作）
-```
+![CSRF 攻击时序图](/images/csrf-flow.svg)
 
 #### 为什么 SameSite Cookie 不能完全替代 Token
 
@@ -329,24 +261,7 @@ Token 设计的核心要求：
 
 文件上传不是"传个文件"这么简单，它是一整条攻击链：
 
-```mermaid
-graph LR
-    A["上传文件"] --> B{"通过校验?"}
-    B -->|"被拦截"| C["尝试绕过"]
-    C -->|"重新提交"| B
-    B -->|"通过"| D["文件存储"]
-
-    D --> E{"存储在哪?"}
-    E -->|"Web 可访问目录"| F{"服务器如何解析?"}
-    E -->|"对象存储 OSS"| G["安全，无法执行"]
-    E -->|"非 Web 目录"| G
-
-    F -->|"按后缀名解析"| H["恶意脚本被执行"]
-    F -->|"强制下载"| I["安全"]
-    F -->|"取消解析权限"| I
-
-    H --> J["RCE 远程代码执行"]
-```
+![文件上传攻击链](/images/file-upload-chain.svg)
 
 整个链条里，只要有一个环节阻断，攻击就失败。防御的思路就是在每个环节都加阻断。
 
@@ -426,20 +341,7 @@ location /uploads/ {
 
 SSRF 的威力不在"让服务器发请求"，而在"服务器能访问到你访问不到的地方"。
 
-```mermaid
-graph TD
-    A[攻击者] -->|"url=http://169.254.169.254"| B[目标服务器]
-
-    B --> C[内网服务发现]
-    B --> D[云厂商元数据获取]
-    B --> E[Redis / MySQL 内网访问]
-    B --> F[内部 API 调用]
-
-    C --> C1["扫描 192.168.x.x\n10.x.x.x 网段"]
-    D --> D1["AWS: /latest/meta-data/\n阿里云: /openapi/latest/meta-data/"]
-    E --> E1["Gopher 协议攻击 Redis\n写入 SSH 公钥或定时任务"]
-    F --> F1["调用内部管理接口\n获取敏感数据"]
-```
+![SSRF 攻击场景](/images/ssrf-attack.svg)
 
 **云环境元数据接口是 SSRF 最常见的利用目标：**
 
@@ -525,13 +427,7 @@ management:
 
 Java 反序列化时，会从字节流中重建对象。如果这个类有 `readObject()` 方法，反序列化时会自动调用。攻击者可以构造包含恶意逻辑的序列化对象，在 `readObject()` 中执行任意代码。
 
-```mermaid
-graph LR
-    A[攻击者构造<br/>恶意序列化数据] --> B[发送到目标应用]
-    B --> C[应用调用<br/>ObjectInputStream.readObject]
-    C --> D[反序列化触发<br/>Gadget Chain]
-    D --> E[执行任意命令]
-```
+![Java 反序列化攻击链](/images/deserialization-flow.svg)
 
 #### Gadget Chain 是什么
 
@@ -574,21 +470,7 @@ mapper.activateDefaultTyping(mapper.getPolymorphicTypeValidator(),
 
 Burp 不是"点一下自动扫描"的工具。它的核心价值是**让你看到和控制每一个 HTTP 请求**。
 
-```mermaid
-graph TD
-    A[浏览器配置代理 127.0.0.1:8080] --> B[Burp Proxy 拦截]
-
-    B --> C{测试目标}
-    C -->|手动修改参数| D[Repeater 反复重放]
-    C -->|批量 Fuzz 测试| E[Intruder 暴力枚举]
-    C -->|编码解码| F[Decoder 格式转换]
-    C -->|自动扫描| G[Scanner 漏洞检测]
-
-    D --> D1[SQL 注入 / XSS / 逻辑漏洞]
-    E --> E1[目录枚举 / 密码爆破 / 参数 Fuzz]
-    F --> F1[URL 编码 / Base64 / HTML 实体]
-    G --> G1[常见漏洞自动检测]
-```
+![Burp Suite 核心工作流](/images/burp-suite-workflow.svg)
 
 #### Intruder 攻击类型的选择逻辑
 
@@ -725,20 +607,7 @@ class URLCrawler:
 
 ### HTTP 安全响应头
 
-```mermaid
-graph TD
-    A[HTTP 安全头] --> B[CSP 内容安全策略]
-    A --> D[X-Content-Type-Options]
-    A --> E[X-Frame-Options]
-    A --> F[HSTS 强制 HTTPS]
-    A --> G[Referrer-Policy]
-
-    B --> B1["default-src 'self'\n限制所有资源加载来源"]
-    D --> D1["nosniff\n禁止 MIME 嗅探"]
-    E --> E1["DENY\n禁止 iframe 嵌套"]
-    F --> F1["max-age=31536000\n强制 HTTPS 连接"]
-    G --> G1["strict-origin-when-cross-origin\n控制 Referer 泄露"]
-```
+![HTTP 安全响应头](/images/http-security-headers.svg)
 
 **CSP 是 XSS 的最后一道防线。** 即使攻击者成功注入了 `<script>` 标签，CSP 会阻止加载和执行外部脚本。
 

@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 380" font-family="system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <style>
+      .title { fill: #0f172a; font-size: 18px; font-weight: 700; text-anchor: middle; }
+      .root { fill: #1e40af; }
+      .root-text { fill: white; font-size: 15px; font-weight: 600; text-anchor: middle; }
+      .header { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+      .header-text { fill: #1e40af; font-size: 12px; font-weight: 600; text-anchor: middle; }
+      .detail { fill: #f8fafc; stroke: #94a3b8; stroke-width: 1.5; }
+      .detail-text { fill: #475569; font-size: 11px; text-anchor: middle; }
+      .line { stroke: #94a3b8; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+  <text x="450" y="25" class="title">HTTP 安全响应头</text>
+  <rect x="370" y="45" width="160" height="40" rx="20" class="root" />
+  <text x="450" y="70" class="root-text">HTTP 安全头</text>
+  <line x1="450" y1="85" x2="90" y2="130" class="line" />
+  <line x1="450" y1="85" x2="270" y2="130" class="line" />
+  <line x1="450" y1="85" x2="450" y2="130" class="line" />
+  <line x1="450" y1="85" x2="630" y2="130" class="line" />
+  <line x1="450" y1="85" x2="810" y2="130" class="line" />
+  <rect x="15" y="130" width="150" height="34" rx="8" class="header" />
+  <text x="90" y="151" class="header-text">CSP</text>
+  <rect x="195" y="130" width="150" height="34" rx="8" class="header" />
+  <text x="270" y="151" class="header-text">X-Content-Type</text>
+  <rect x="375" y="130" width="150" height="34" rx="8" class="header" />
+  <text x="450" y="151" class="header-text">X-Frame-Options</text>
+  <rect x="555" y="130" width="150" height="34" rx="8" class="header" />
+  <text x="630" y="151" class="header-text">HSTS</text>
+  <rect x="735" y="130" width="150" height="34" rx="8" class="header" />
+  <text x="810" y="151" class="header-text">Referrer-Policy</text>
+  <line x1="90" y1="164" x2="90" y2="200" class="line" />
+  <rect x="15" y="200" width="150" height="40" rx="8" class="detail" />
+  <text x="90" y="217" class="detail-text">default-src 'self'</text>
+  <text x="90" y="233" class="detail-text">限制资源加载来源</text>
+  <line x1="270" y1="164" x2="270" y2="200" class="line" />
+  <rect x="195" y="200" width="150" height="40" rx="8" class="detail" />
+  <text x="270" y="217" class="detail-text">nosniff</text>
+  <text x="270" y="233" class="detail-text">禁止 MIME 嗅探</text>
+  <line x1="450" y1="164" x2="450" y2="200" class="line" />
+  <rect x="375" y="200" width="150" height="40" rx="8" class="detail" />
+  <text x="450" y="217" class="detail-text">DENY / SAMEORIGIN</text>
+  <text x="450" y="233" class="detail-text">禁止 iframe 嵌套</text>
+  <line x1="630" y1="164" x2="630" y2="200" class="line" />
+  <rect x="555" y="200" width="150" height="40" rx="8" class="detail" />
+  <text x="630" y="217" class="detail-text">max-age=31536000</text>
+  <text x="630" y="233" class="detail-text">强制 HTTPS 连接</text>
+  <line x1="810" y1="164" x2="810" y2="200" class="line" />
+  <rect x="735" y="200" width="150" height="40" rx="8" class="detail" />
+  <text x="810" y="217" class="detail-text">strict-origin-when</text>
+  <text x="810" y="233" class="detail-text">控制 Referer 泄露</text>
+  <rect x="250" y="270" width="400" height="34" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5" />
+  <text x="450" y="286" fill="#dc2626" font-size="12" text-anchor="middle" font-weight="500">CSP 是 XSS 的最后一道防线</text>
+  <text x="450" y="300" fill="#dc2626" font-size="11" text-anchor="middle">即使成功注入脚本，CSP 也会阻止加载和执行</text>
+  <rect x="200" y="330" width="500" height="28" rx="14" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5" />
+  <text x="450" y="349" fill="#92400e" font-size="12" text-anchor="middle" font-weight="500">纵深防御：多层防护，即使某一层被突破还有其他层兜底</text>
+</svg>

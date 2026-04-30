@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" font-family="system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <style>
+      .title { fill: #0f172a; font-size: 18px; font-weight: 700; text-anchor: middle; }
+      .step { fill: #fef2f2; stroke: #ef4444; stroke-width: 1.5; }
+      .step-text { fill: #dc2626; font-size: 13px; font-weight: 600; text-anchor: middle; }
+      .arrow { stroke: #ef4444; stroke-width: 2; fill: none; marker-end: url(#arrow-r); }
+    </style>
+    <marker id="arrow-r" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#ef4444" />
+    </marker>
+  </defs>
+  <text x="400" y="25" class="title">Java 反序列化攻击链</text>
+  <rect x="20" y="60" width="140" height="50" rx="12" class="step" />
+  <text x="90" y="82" class="step-text">攻击者构造</text>
+  <text x="90" y="100" class="step-text">恶意序列化数据</text>
+  <line x1="160" y1="85" x2="220" y2="85" class="arrow" />
+  <rect x="220" y="60" width="140" height="50" rx="12" class="step" />
+  <text x="290" y="82" class="step-text">发送到</text>
+  <text x="290" y="100" class="step-text">目标应用</text>
+  <line x1="360" y1="85" x2="420" y2="85" class="arrow" />
+  <rect x="420" y="60" width="140" height="50" rx="12" class="step" />
+  <text x="490" y="82" class="step-text">应用调用</text>
+  <text x="490" y="100" class="step-text">ObjectInputStream</text>
+  <line x1="560" y1="85" x2="620" y2="85" class="arrow" />
+  <rect x="620" y="60" width="160" height="50" rx="12" class="step" />
+  <text x="700" y="82" class="step-text">触发 Gadget Chain</text>
+  <text x="700" y="100" class="step-text">执行任意命令</text>
+  <text x="400" y="155" fill="#64748b" font-size="12" text-anchor="middle" font-style="italic">一次反序列化，全网皆漏洞</text>
+  <text x="400" y="175" fill="#64748b" font-size="11" text-anchor="middle">classpath 中存在常见库即可利用，不需要目标应用有漏洞代码</text>
+  <rect x="100" y="210" width="260" height="34" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5" />
+  <text x="230" y="232" fill="#166534" font-size="12" text-anchor="middle" font-weight="500">方案一：白名单校验 resolveClass</text>
+  <rect x="440" y="210" width="260" height="34" rx="8" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.5" />
+  <text x="570" y="232" fill="#166534" font-size="12" text-anchor="middle" font-weight="500">方案二：使用 Jackson/Protobuf 替代</text>
+  <rect x="200" y="260" width="400" height="28" rx="14" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5" />
+  <text x="400" y="279" fill="#92400e" font-size="12" text-anchor="middle" font-weight="500">最安全：完全禁止反序列化不可信数据</text>
+</svg>

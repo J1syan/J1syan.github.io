@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 440" font-family="system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <style>
+      .title { fill: #0f172a; font-size: 18px; font-weight: 700; text-anchor: middle; }
+      .root { fill: #1e40af; }
+      .root-text { fill: white; font-size: 15px; font-weight: 600; text-anchor: middle; }
+      .ctx { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+      .ctx-text { fill: #1e40af; font-size: 12px; font-weight: 600; text-anchor: middle; }
+      .payload { fill: #fef2f2; stroke: #ef4444; stroke-width: 1.5; }
+      .payload-text { fill: #dc2626; font-size: 11px; text-anchor: middle; }
+      .line { stroke: #94a3b8; stroke-width: 1.5; fill: none; }
+    </style>
+  </defs>
+  <text x="400" y="28" class="title">XSS 上下文与 Payload 构造</text>
+  <rect x="320" y="50" width="160" height="36" rx="18" class="root" />
+  <text x="400" y="73" class="root-text">用户输入出现在哪？</text>
+  <line x1="400" y1="86" x2="100" y2="130" class="line" />
+  <line x1="400" y1="86" x2="300" y2="130" class="line" />
+  <line x1="400" y1="86" x2="500" y2="130" class="line" />
+  <line x1="400" y1="86" x2="700" y2="130" class="line" />
+  <rect x="20" y="130" width="160" height="34" rx="8" class="ctx" />
+  <text x="100" y="151" class="ctx-text">div 标签内容</text>
+  <rect x="220" y="130" width="160" height="34" rx="8" class="ctx" />
+  <text x="300" y="151" class="ctx-text">img src 属性</text>
+  <rect x="420" y="130" width="160" height="34" rx="8" class="ctx" />
+  <text x="500" y="151" class="ctx-text">script 变量赋值</text>
+  <rect x="620" y="130" width="160" height="34" rx="8" class="ctx" />
+  <text x="700" y="151" class="ctx-text">a href 属性</text>
+  <line x1="100" y1="164" x2="100" y2="200" class="line" />
+  <rect x="20" y="200" width="160" height="34" rx="8" class="payload" />
+  <text x="100" y="218" class="payload-text">&lt;script&gt;alert(1)&lt;/script&gt;</text>
+  <line x1="300" y1="164" x2="300" y2="200" class="line" />
+  <rect x="220" y="200" width="160" height="34" rx="8" class="payload" />
+  <text x="300" y="218" class="payload-text">" onerror="alert(1)</text>
+  <line x1="500" y1="164" x2="500" y2="200" class="line" />
+  <rect x="420" y="200" width="160" height="34" rx="8" class="payload" />
+  <text x="500" y="218" class="payload-text">'; alert(1); //</text>
+  <line x1="700" y1="164" x2="700" y2="200" class="line" />
+  <rect x="620" y="200" width="160" height="34" rx="8" class="payload" />
+  <text x="700" y="218" class="payload-text">javascript:alert(1)</text>
+  <rect x="20" y="260" width="160" height="34" rx="8" class="ctx" />
+  <text x="100" y="281" class="ctx-text">element.innerHTML</text>
+  <rect x="220" y="260" width="160" height="34" rx="8" class="ctx" />
+  <text x="300" y="281" class="ctx-text">location.hash</text>
+  <rect x="420" y="260" width="160" height="34" rx="8" class="ctx" />
+  <text x="500" y="281" class="ctx-text">模板字符串拼接</text>
+  <rect x="620" y="260" width="160" height="34" rx="8" class="ctx" />
+  <text x="700" y="281" class="ctx-text">v-html / dangerouslySet</text>
+  <line x1="100" y1="294" x2="100" y2="330" class="line" />
+  <rect x="20" y="330" width="160" height="34" rx="8" class="payload" />
+  <text x="100" y="348" class="payload-text">&lt;img src=x onerror=alert(1)&gt;</text>
+  <line x1="300" y1="294" x2="300" y2="330" class="line" />
+  <rect x="220" y="330" width="160" height="34" rx="8" class="payload" />
+  <text x="300" y="348" class="payload-text">javascript:alert(1)</text>
+  <line x1="500" y1="294" x2="500" y2="330" class="line" />
+  <rect x="420" y="330" width="160" height="34" rx="8" class="payload" />
+  <text x="500" y="348" class="payload-text">${userInput} 闭合后注入</text>
+  <line x1="700" y1="294" x2="700" y2="330" class="line" />
+  <rect x="620" y="330" width="160" height="34" rx="8" class="payload" />
+  <text x="700" y="348" class="payload-text">v-html 渲染恶意 HTML</text>
+  <rect x="260" y="390" width="280" height="28" rx="14" fill="#fef3c7" stroke="#f59e0b" stroke-width="1.5" />
+  <text x="400" y="409" fill="#92400e" font-size="12" text-anchor="middle" font-weight="500">理解上下文，Payload 是推导出来的，不是背出来的</text>
+</svg>
