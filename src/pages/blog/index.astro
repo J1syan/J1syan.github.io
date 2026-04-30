@@ -28,7 +28,10 @@ const posts = await getPublishedPosts();
 						<li>
 							<a href={postUrl(post)}>
 								<div>
-									<h2>{post.data.title}</h2>
+									<h2>
+										{post.data.title}
+										{post.data.password && <span class="lock-badge" title="加密文章">&#128274;</span>}
+									</h2>
 									<p>{post.data.description}</p>
 									<div class="post-taxonomy">
 										<span>{post.data.category}</span>

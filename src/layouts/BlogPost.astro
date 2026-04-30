@@ -100,4 +100,79 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 		color: rgb(var(--gray));
 		font-size: 0.95rem;
 	}
+
+	#password-gate {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 4rem 2rem;
+		text-align: center;
+		background: var(--card-bg);
+		border: 1px solid var(--border-color);
+		border-radius: 12px;
+		margin-top: 2rem;
+	}
+
+	#password-gate .lock-icon {
+		font-size: 3rem;
+		margin-bottom: 1rem;
+	}
+
+	#password-gate h3 {
+		margin: 0 0 0.5rem;
+		font-size: 1.25rem;
+	}
+
+	#password-gate p {
+		margin: 0 0 1.5rem;
+		color: rgb(var(--gray));
+	}
+
+	#password-gate form {
+		display: flex;
+		gap: 0.5rem;
+		width: 100%;
+		max-width: 400px;
+	}
+
+	#password-gate input {
+		flex: 1;
+		padding: 0.6rem 1rem;
+		border: 1px solid var(--border-color);
+		border-radius: 6px;
+		background: var(--input-bg);
+		color: var(--text-color);
+		font-size: 0.95rem;
+		outline: none;
+		transition: border-color 0.2s;
+	}
+
+	#password-gate input:focus {
+		border-color: var(--accent-color);
+	}
+
+	#password-gate input.error {
+		border-color: #ef4444;
+	}
+
+	#password-gate button {
+		padding: 0.6rem 1.5rem;
+		border: none;
+		border-radius: 6px;
+		background: var(--accent-color);
+		color: white;
+		font-size: 0.95rem;
+		cursor: pointer;
+		transition: opacity 0.2s;
+	}
+
+	#password-gate button:hover {
+		opacity: 0.85;
+	}
+
+	#password-gate .error {
+		color: #ef4444;
+		font-size: 0.85rem;
+	}
 </style>

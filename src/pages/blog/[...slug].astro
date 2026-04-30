@@ -14,8 +14,54 @@ type Props = CollectionEntry<'blog'>;
 
 const post = Astro.props;
 const { Content } = await render(post);
+const isProtected = !!post.data.password;
 ---
 
 <BlogPost {...post.data}>
-	<Content />
+	{isProtected ? (
+		<>
+			<div id="password-gate">
+				<div class="lock-icon">&#128274;</div>
+				<h3>此文章已加密</h3>
+				<p>请输入密码查看内容</p>
+				<form onsubmit="return checkPassword(event)">
+					<input id="password-input" type="password" placeholder="输入密码" autocomplete="off" />
+					<button type="submit">解锁</button>
+				</form>
+				<p id="password-error" class="error" style="display:none;">密码错误，请重试</p>
+			</div>
+			<div id="protected-content" style="display:none;">
+				<Content />
+			</div>
+		</>
+	) : (
+		<Content />
+	)}
 </BlogPost>
+
+{isProtected && (
+	<script define:vars={{ password: post.data.password }}>
+		window.__postPassword = password;
+
+		function checkPassword(event: Event) {
+			event.preventDefault();
+			const input = document.getElementById('password-input') as HTMLInputElement;
+			const error = document.getElementById('password-error') as HTMLElement;
+			const gate = document.getElementById('password-gate') as HTMLElement;
+			const content = document.getElementById('protected-content') as HTMLElement;
+
+			if (input.value === window.__postPassword) {
+				gate.style.display = 'none';
+				content.style.display = 'block';
+			} else {
+				error.style.display = 'block';
+				input.value = '';
+				input.focus();
+				setTimeout(() => { error.style.display = 'none'; }, 2000);
+			}
+			return false;
+		}
+
+		window.checkPassword = checkPassword;
+	</script>
+)}

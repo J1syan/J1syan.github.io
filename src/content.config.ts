@@ -13,6 +13,7 @@ const blog = defineCollection({
 			category: z.string().default('未分类'),
 			tags: z.array(z.string()).default([]),
 			draft: z.boolean().default(false),
+			password: z.string().optional(),
 			heroImage: z.optional(image()),
 		}),
 });
