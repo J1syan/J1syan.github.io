@@ -75,7 +75,19 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 				});
 
 				for (const pre of blocks) {
-					const graphDef = pre.textContent.trim();
+					// Shiki 会把每行包裹在 <span class="line"> 中
+					// 直接从 line spans 提取文本，避免 textContent 带来的额外换行
+					const lines = pre.querySelectorAll('span.line');
+					let graphDef;
+					if (lines.length > 0) {
+						graphDef = Array.from(lines)
+							.map(line => line.textContent)
+							.join('\n')
+							.trim();
+					} else {
+						graphDef = pre.textContent.trim();
+					}
+
 					const id = 'mermaid-' + Math.random().toString(36).substring(2, 9);
 
 					try {
@@ -85,7 +97,12 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 						wrapper.innerHTML = svg;
 						pre.replaceWith(wrapper);
 					} catch (err) {
-						console.warn('Mermaid render error:', err);
+						console.error('Mermaid render error:', err);
+						// 渲染失败时保留原始代码块并显示错误提示
+						const errorDiv = document.createElement('div');
+						errorDiv.style.cssText = 'color: #ef4444; padding: 1rem; background: #fef2f2; border-radius: 6px; margin: 1rem 0;';
+						errorDiv.innerHTML = `<strong>Mermaid 渲染失败：</strong><pre style="margin-top: 0.5rem; font-size: 0.85rem; overflow-x: auto;">${err.message}</pre>`;
+						pre.parentNode.insertBefore(errorDiv, pre);
 					}
 				}
 			})();
