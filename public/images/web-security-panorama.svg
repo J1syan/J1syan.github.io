@@ -1,140 +1,155 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 800" font-family="system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 750" font-family="system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif">
   <defs>
     <style>
-      .center { fill: #1e40af; }
-      .center-text { fill: white; font-size: 18px; font-weight: 600; text-anchor: middle; }
-      .process { fill: #dbeafe; stroke: #3b82f6; stroke-width: 2; }
-      .process-text { fill: #1e40af; font-size: 14px; text-anchor: middle; }
-      .vuln { fill: #fef2f2; stroke: #ef4444; stroke-width: 2; }
-      .vuln-text { fill: #dc2626; font-size: 14px; font-weight: 500; text-anchor: middle; }
-      .arrow { stroke: #64748b; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
-      .arrow-inner { stroke: #94a3b8; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead-small); }
-      .title { fill: #0f172a; font-size: 22px; font-weight: 700; text-anchor: middle; }
-      .subtitle { fill: #475569; font-size: 14px; text-anchor: middle; }
+      .title { fill: #0f172a; font-size: 24px; font-weight: 700; text-anchor: middle; }
+      .subtitle { fill: #64748b; font-size: 14px; text-anchor: middle; }
       .attacker { fill: #f0fdf4; stroke: #22c55e; stroke-width: 2; }
       .attacker-text { fill: #166534; font-size: 15px; font-weight: 600; text-anchor: middle; }
+      .center { fill: #1e40af; }
+      .center-text { fill: white; font-size: 18px; font-weight: 600; text-anchor: middle; }
+      .process { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+      .process-text { fill: #1e40af; font-size: 13px; text-anchor: middle; }
+      .vuln { fill: #fef2f2; stroke: #ef4444; stroke-width: 1.5; }
+      .vuln-text { fill: #dc2626; font-size: 13px; font-weight: 500; text-anchor: middle; }
+      .arrow { stroke: #94a3b8; stroke-width: 1.5; fill: none; }
+      .dotted { stroke: #cbd5e1; stroke-width: 1; stroke-dasharray: 4,3; fill: none; }
+      .legend { fill: #64748b; font-size: 12px; }
     </style>
-    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
-    </marker>
-    <marker id="arrowhead-small" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
       <polygon points="0 0, 8 3, 0 6" fill="#94a3b8" />
     </marker>
   </defs>
 
   <!-- Title -->
-  <text x="700" y="40" class="title">Web 安全漏洞全景图</text>
-  <text x="700" y="62" class="subtitle">攻击者输入 → 服务端处理方式 → 漏洞类型</text>
+  <text x="700" y="35" class="title">Web 安全漏洞全景图</text>
+  <text x="700" y="55" class="subtitle">攻击者输入 → 服务端处理 → 可能引发的漏洞（多对多关系）</text>
 
-  <!-- Attacker icon (top) -->
-  <rect x="620" y="80" width="160" height="40" rx="20" class="attacker" />
+  <!-- Attacker -->
+  <rect x="610" y="80" width="180" height="40" rx="20" class="attacker" />
   <text x="700" y="105" class="attacker-text">🎯 攻击者输入</text>
+  <line x1="700" y1="120" x2="700" y2="175" class="arrow" marker-end="url(#arrow)" />
 
-  <!-- Arrow from attacker to center -->
-  <line x1="700" y1="120" x2="700" y2="230" class="arrow" />
+  <!-- Center -->
+  <circle cx="700" cy="210" r="38" class="center" />
+  <text x="700" y="205" class="center-text">服务端</text>
+  <text x="700" y="225" class="center-text">如何处理?</text>
 
-  <!-- Center circle -->
-  <circle cx="700" cy="280" r="55" class="center" />
-  <text x="700" y="272" class="center-text">服务端</text>
-  <text x="700" y="295" class="center-text">如何处理?</text>
+  <!-- 7 processing types -->
+  <rect x="35" y="290" width="170" height="34" rx="17" class="process" />
+  <text x="120" y="312" class="process-text">拼接到 SQL / 查询语句</text>
 
-  <!-- 11 branches, evenly distributed in an arc -->
-  <!-- Using positions on a semi-circle from left to right -->
+  <rect x="220" y="290" width="170" height="34" rx="17" class="process" />
+  <text x="305" y="312" class="process-text">输出到 HTML 页面</text>
 
-  <!-- Branch 1: 拼接到 SQL -->
-  <line x1="660" y1="240" x2="120" y2="400" class="arrow-inner" />
-  <rect x="50" y="400" width="140" height="36" rx="18" class="process" />
-  <text x="120" y="423" class="process-text">拼接到 SQL</text>
-  <line x1="120" y1="436" x2="120" y2="470" class="arrow-inner" />
-  <rect x="50" y="470" width="140" height="36" rx="18" class="vuln" />
-  <text x="120" y="493" class="vuln-text">SQL 注入</text>
+  <rect x="405" y="290" width="170" height="34" rx="17" class="process" />
+  <text x="490" y="312" class="process-text">存储用户提交的文件</text>
 
-  <!-- Branch 2: 输出到 HTML -->
-  <line x1="665" y1="235" x2="245" y2="400" class="arrow-inner" />
-  <rect x="175" y="400" width="140" height="36" rx="18" class="process" />
-  <text x="245" y="423" class="process-text">输出到 HTML</text>
-  <line x1="245" y1="436" x2="245" y2="470" class="arrow-inner" />
-  <rect x="175" y="470" width="140" height="36" rx="18" class="vuln" />
-  <text x="245" y="493" class="vuln-text">XSS</text>
+  <rect x="590" y="290" width="170" height="34" rx="17" class="process" />
+  <text x="675" y="312" class="process-text">代替用户发起请求</text>
 
-  <!-- Branch 3: 存储为文件 -->
-  <line x1="672" y1="232" x2="370" y2="400" class="arrow-inner" />
-  <rect x="300" y="400" width="140" height="36" rx="18" class="process" />
-  <text x="370" y="423" class="process-text">存储为文件</text>
-  <line x1="370" y1="436" x2="370" y2="470" class="arrow-inner" />
-  <rect x="300" y="470" width="140" height="36" rx="18" class="vuln" />
-  <text x="370" y="493" class="vuln-text">文件上传 RCE</text>
+  <rect x="775" y="290" width="170" height="34" rx="17" class="process" />
+  <text x="860" y="312" class="process-text">执行系统命令</text>
 
-  <!-- Branch 4: 发起 HTTP 请求 -->
-  <line x1="680" y1="230" x2="495" y2="400" class="arrow-inner" />
-  <rect x="425" y="400" width="140" height="36" rx="18" class="process" />
-  <text x="495" y="423" class="process-text">发起 HTTP 请求</text>
-  <line x1="495" y1="436" x2="495" y2="470" class="arrow-inner" />
-  <rect x="425" y="470" width="140" height="36" rx="18" class="vuln" />
-  <text x="495" y="493" class="vuln-text">SSRF</text>
+  <rect x="960" y="290" width="170" height="34" rx="17" class="process" />
+  <text x="1045" y="312" class="process-text">解析/反序列化数据</text>
 
-  <!-- Branch 5: 执行系统命令 -->
-  <line x1="690" y1="228" x2="620" y2="400" class="arrow-inner" />
-  <rect x="550" y="400" width="140" height="36" rx="18" class="process" />
-  <text x="620" y="423" class="process-text">执行系统命令</text>
-  <line x1="620" y1="436" x2="620" y2="470" class="arrow-inner" />
-  <rect x="550" y="470" width="140" height="36" rx="18" class="vuln" />
-  <text x="620" y="493" class="vuln-text">命令注入</text>
+  <rect x="1145" y="290" width="220" height="34" rx="17" class="process" />
+  <text x="1255" y="312" class="process-text">仅校验身份，不校验权限</text>
 
-  <!-- Branch 6: 解析 XML (center-right) -->
-  <line x1="710" y1="228" x2="745" y2="400" class="arrow-inner" />
-  <rect x="675" y="400" width="140" height="36" rx="18" class="process" />
-  <text x="745" y="423" class="process-text">解析 XML</text>
-  <line x1="745" y1="436" x2="745" y2="470" class="arrow-inner" />
-  <rect x="675" y="470" width="140" height="36" rx="18" class="vuln" />
-  <text x="745" y="493" class="vuln-text">XXE</text>
+  <!-- Dotted arrows from center to processes -->
+  <line x1="675" y1="240" x2="120" y2="290" class="dotted" />
+  <line x1="680" y1="238" x2="305" y2="290" class="dotted" />
+  <line x1="685" y1="236" x2="490" y2="290" class="dotted" />
+  <line x1="695" y1="248" x2="675" y2="290" class="dotted" />
+  <line x1="705" y1="248" x2="860" y2="290" class="dotted" />
+  <line x1="715" y1="236" x2="1045" y2="290" class="dotted" />
+  <line x1="720" y1="234" x2="1255" y2="290" class="dotted" />
 
-  <!-- Branch 7: 反序列化对象 -->
-  <line x1="720" y1="230" x2="870" y2="400" class="arrow-inner" />
-  <rect x="800" y="400" width="140" height="36" rx="18" class="process" />
-  <text x="870" y="423" class="process-text">反序列化对象</text>
-  <line x1="870" y1="436" x2="870" y2="470" class="arrow-inner" />
-  <rect x="800" y="470" width="140" height="36" rx="18" class="vuln" />
-  <text x="870" y="493" class="vuln-text">反序列化漏洞</text>
+  <!-- Group 1: SQL -->
+  <line x1="120" y1="324" x2="120" y2="365" class="arrow" marker-end="url(#arrow)" />
+  <rect x="40" y="365" width="160" height="32" rx="16" class="vuln" />
+  <text x="120" y="386" class="vuln-text">SQL 注入</text>
+  <rect x="40" y="405" width="160" height="32" rx="16" class="vuln" />
+  <text x="120" y="426" class="vuln-text">存储型 XSS</text>
 
-  <!-- Branch 8: 仅校验身份 -->
-  <line x1="728" y1="232" x2="995" y2="400" class="arrow-inner" />
-  <rect x="925" y="400" width="140" height="36" rx="18" class="process" />
-  <text x="995" y="423" class="process-text">仅校验身份</text>
-  <line x1="995" y1="436" x2="995" y2="470" class="arrow-inner" />
-  <rect x="925" y="470" width="140" height="36" rx="18" class="vuln" />
-  <text x="995" y="493" class="vuln-text">越权访问</text>
+  <!-- Group 2: HTML -->
+  <line x1="305" y1="324" x2="305" y2="365" class="arrow" marker-end="url(#arrow)" />
+  <rect x="225" y="365" width="160" height="32" rx="16" class="vuln" />
+  <text x="305" y="386" class="vuln-text">反射型 XSS</text>
+  <rect x="225" y="405" width="160" height="32" rx="16" class="vuln" />
+  <text x="305" y="426" class="vuln-text">存储型 XSS</text>
+  <rect x="225" y="445" width="160" height="32" rx="16" class="vuln" />
+  <text x="305" y="466" class="vuln-text">DOM 型 XSS</text>
 
-  <!-- Branch 9: Cookie 自动携带 -->
-  <line x1="735" y1="235" x2="1120" y2="400" class="arrow-inner" />
-  <rect x="1050" y="400" width="140" height="36" rx="18" class="process" />
-  <text x="1120" y="423" class="process-text">Cookie 自动携带</text>
-  <line x1="1120" y1="436" x2="1120" y2="470" class="arrow-inner" />
-  <rect x="1050" y="470" width="140" height="36" rx="18" class="vuln" />
-  <text x="1120" y="493" class="vuln-text">CSRF</text>
+  <!-- Group 3: 文件 -->
+  <line x1="490" y1="324" x2="490" y2="365" class="arrow" marker-end="url(#arrow)" />
+  <rect x="410" y="365" width="160" height="32" rx="16" class="vuln" />
+  <text x="490" y="386" class="vuln-text">文件上传 RCE</text>
+  <rect x="410" y="405" width="160" height="32" rx="16" class="vuln" />
+  <text x="490" y="426" class="vuln-text">存储型 XSS</text>
 
-  <!-- Branch 10: 配置不当 -->
-  <line x1="740" y1="240" x2="1245" y2="400" class="arrow-inner" />
-  <rect x="1175" y="400" width="140" height="36" rx="18" class="process" />
-  <text x="1245" y="423" class="process-text">配置不当</text>
-  <line x1="1245" y1="436" x2="1245" y2="470" class="arrow-inner" />
-  <rect x="1175" y="470" width="140" height="36" rx="18" class="vuln" />
-  <text x="1245" y="493" class="vuln-text">安全配置错误</text>
+  <!-- Group 4: HTTP 请求 -->
+  <line x1="675" y1="324" x2="675" y2="365" class="arrow" marker-end="url(#arrow)" />
+  <rect x="595" y="365" width="160" height="32" rx="16" class="vuln" />
+  <text x="675" y="386" class="vuln-text">SSRF</text>
+  <rect x="595" y="405" width="160" height="32" rx="16" class="vuln" />
+  <text x="675" y="426" class="vuln-text">CSRF</text>
 
-  <!-- Branch 11: 认证缺陷 -->
-  <line x1="740" y1="248" x2="1310" y2="380" class="arrow-inner" />
-  <rect x="1240" y="470" width="140" height="36" rx="18" class="process" />
-  <text x="1310" y="493" class="process-text">认证缺陷</text>
-  <line x1="1310" y1="506" x2="1310" y2="540" class="arrow-inner" />
-  <rect x="1240" y="540" width="140" height="36" rx="18" class="vuln" />
-  <text x="1310" y="563" class="vuln-text">认证失败</text>
+  <!-- Group 5: 系统命令 -->
+  <line x1="860" y1="324" x2="860" y2="365" class="arrow" marker-end="url(#arrow)" />
+  <rect x="780" y="365" width="160" height="32" rx="16" class="vuln" />
+  <text x="860" y="386" class="vuln-text">命令注入</text>
 
-  <!-- Legend / Footer -->
-  <rect x="480" y="620" width="18" height="18" rx="9" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5" />
-  <text x="505" y="634" fill="#475569" font-size="13">处理场景</text>
-  <rect x="580" y="620" width="18" height="18" rx="9" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5" />
-  <text x="605" y="634" fill="#475569" font-size="13">漏洞类型</text>
-  <line x1="680" y1="629" x2="698" y2="629" stroke="#64748b" stroke-width="2" />
-  <polygon points="698,626 706,629 698,632" fill="#64748b" />
-  <text x="712" y="634" fill="#475569" font-size="13">数据流向</text>
+  <!-- Group 6: 解析/反序列化 -->
+  <line x1="1045" y1="324" x2="1045" y2="365" class="arrow" marker-end="url(#arrow)" />
+  <rect x="965" y="365" width="160" height="32" rx="16" class="vuln" />
+  <text x="1045" y="386" class="vuln-text">XXE</text>
+  <rect x="965" y="405" width="160" height="32" rx="16" class="vuln" />
+  <text x="1045" y="426" class="vuln-text">反序列化漏洞</text>
+
+  <!-- Group 7: 仅校验身份 -->
+  <line x1="1255" y1="324" x2="1255" y2="365" class="arrow" marker-end="url(#arrow)" />
+  <rect x="1175" y="365" width="160" height="32" rx="16" class="vuln" />
+  <text x="1255" y="386" class="vuln-text">越权访问</text>
+  <rect x="1175" y="405" width="160" height="32" rx="16" class="vuln" />
+  <text x="1255" y="426" class="vuln-text">认证绕过</text>
+
+  <!-- Row 2: 配置类 -->
+  <rect x="35" y="510" width="170" height="34" rx="17" class="process" />
+  <text x="120" y="532" class="process-text">默认配置 / 组件过旧</text>
+  <rect x="220" y="510" width="170" height="34" rx="17" class="process" />
+  <text x="305" y="532" class="process-text">Cookie / Session 配置</text>
+  <rect x="405" y="510" width="170" height="34" rx="17" class="process" />
+  <text x="490" y="532" class="process-text">安全响应头缺失</text>
+
+  <line x1="685" y1="245" x2="120" y2="510" class="dotted" />
+  <line x1="690" y1="245" x2="305" y2="510" class="dotted" />
+  <line x1="695" y1="245" x2="490" y2="510" class="dotted" />
+
+  <line x1="120" y1="544" x2="120" y2="575" class="arrow" marker-end="url(#arrow)" />
+  <rect x="40" y="575" width="160" height="32" rx="16" class="vuln" />
+  <text x="120" y="596" class="vuln-text">安全配置错误</text>
+  <rect x="40" y="615" width="160" height="32" rx="16" class="vuln" />
+  <text x="120" y="636" class="vuln-text">信息泄露</text>
+
+  <line x1="305" y1="544" x2="305" y2="575" class="arrow" marker-end="url(#arrow)" />
+  <rect x="225" y="575" width="160" height="32" rx="16" class="vuln" />
+  <text x="305" y="596" class="vuln-text">会话劫持</text>
+
+  <line x1="490" y1="544" x2="490" y2="575" class="arrow" marker-end="url(#arrow)" />
+  <rect x="410" y="575" width="160" height="32" rx="16" class="vuln" />
+  <text x="490" y="596" class="vuln-text">点击劫持</text>
+  <rect x="410" y="615" width="160" height="32" rx="16" class="vuln" />
+  <text x="490" y="636" class="vuln-text">MIME 嗅探</text>
+
+  <!-- Legend -->
+  <rect x="520" y="690" width="16" height="16" rx="8" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5" />
+  <text x="542" y="703" class="legend">服务端处理场景</text>
+  <rect x="650" y="690" width="16" height="16" rx="8" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5" />
+  <text x="672" y="703" class="legend">漏洞类型</text>
+  <line x1="760" y1="698" x2="776" y2="698" stroke="#94a3b8" stroke-width="1.5" />
+  <polygon points="776,695 782,698 776,701" fill="#94a3b8" />
+  <text x="788" y="703" class="legend">直接因果</text>
+  <line x1="860" y1="698" x2="876" y2="698" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4,3" />
+  <text x="882" y="703" class="legend">潜在关联</text>
 </svg>
