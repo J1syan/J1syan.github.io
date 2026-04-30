@@ -65,11 +65,6 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 				const blocks = document.querySelectorAll('pre[data-language="mermaid"]');
 				if (blocks.length === 0) return;
 
-				// 创建隐藏容器供 Mermaid 渲染临时 SVG
-				const container = document.createElement('div');
-				container.style.cssText = 'position:absolute;left:-9999px;top:-9999px;visibility:hidden;';
-				document.body.appendChild(container);
-
 				// 为每个代码块添加加载提示
 				for (const pre of blocks) {
 					const loading = document.createElement('div');
@@ -101,10 +96,8 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 						graphDef = pre.textContent.trim();
 					}
 
-					const id = 'mermaid-svg-' + i;
-
 					try {
-						const { svg } = await mermaid.render(id, graphDef);
+						const { svg } = await mermaid.render('mermaid-' + i, graphDef);
 						const wrapper = document.createElement('div');
 						wrapper.className = 'mermaid';
 						wrapper.innerHTML = svg;
@@ -117,8 +110,6 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 						pre.parentNode.insertBefore(errorDiv, pre);
 					}
 				}
-
-				document.body.removeChild(container);
 			})();
 		</script>
 	</body>
