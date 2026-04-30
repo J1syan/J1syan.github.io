@@ -230,22 +230,22 @@ graph TD
 
 ```mermaid
 graph LR
-    A[用户输入] --> B{出现在哪?}
+    A["用户输入"] --> B{"出现在哪?"}
 
-    B -->|HTML 标签内容| C[<div>用户输入</div>]
-    C --> C1["Payload: <script>alert(1)</script>"]
+    B -->|"HTML 标签内容"| C["div 标签内容"]
+    C --> C1["Payload: script alert(1) /script"]
 
-    B -->|HTML 属性值| D[<img src="用户输入">]
-    D --> D1["Payload: \" onerror=\"alert(1)"]
+    B -->|"HTML 属性值"| D["img src 属性"]
+    D --> D1["Payload: onerror=alert(1)"]
 
-    B -->|JavaScript 变量| E[<script>var x = '用户输入'</script>]
-    E --> E1["Payload: '; alert(1); //"]
+    B -->|"JavaScript 变量"| E["script 变量赋值"]
+    E --> E1["Payload: 单引号闭合后注入"]
 
-    B -->|URL 地址| F[<a href="用户输入">]
+    B -->|"URL 地址"| F["a href 属性"]
     F --> F1["Payload: javascript:alert(1)"]
 
-    B -->|DOM 操作目标| G[element.innerHTML = 用户输入]
-    G --> G1["Payload: <img src=x onerror=alert(1)>"]
+    B -->|"DOM 操作目标"| G["element.innerHTML"]
+    G --> G1["Payload: img onerror 注入"]
 ```
 
 理解了上下文，Payload 不是背出来的，是推导出来的。
