@@ -1,63 +1,72 @@
-# Astro Starter Kit: Blog
+# 我的博客
 
-```sh
-npm create astro@latest -- --template blog
+这是 J1syan 的个人博客基础框架，使用 Astro + Markdown/MDX 构建，支持文章、分类、标签、RSS、sitemap 和 GitHub Pages 自动部署。
+
+## 本地运行
+
+```bash
+cd /home/j1syan/Documents/J1syan.github.io
+npm install
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+本地开发地址默认是 `http://localhost:4321/`。
 
-Features:
+## 常用命令
 
-- ✅ Minimal styling (make it your own!)
-- ✅ 100/100 Lighthouse performance
-- ✅ SEO-friendly with canonical URLs and Open Graph data
-- ✅ Sitemap support
-- ✅ RSS Feed support
-- ✅ Markdown & MDX support
+| 命令 | 作用 |
+| --- | --- |
+| `npm run dev` | 启动本地开发服务 |
+| `npm run build` | 构建生产版本到 `dist/` |
+| `npm run preview` | 本地预览生产构建 |
+| `npm run astro -- --help` | 查看 Astro CLI 帮助 |
 
-## 🚀 Project Structure
+## 写文章
 
-Inside of your Astro project, you'll see the following folders and files:
+在 `src/content/blog/` 下新建 Markdown 或 MDX 文件，例如：
+
+```md
+---
+title: '文章标题'
+description: '文章摘要'
+pubDate: '2026-04-30'
+category: '学习笔记'
+tags: ['Java', 'Spring Cloud']
+draft: false
+---
+
+这里写正文。
+```
+
+字段说明：
+
+- `title`：文章标题
+- `description`：文章摘要，用于首页、列表页、SEO 和 RSS
+- `pubDate`：发布日期
+- `updatedDate`：可选，更新日期
+- `category`：文章分类
+- `tags`：文章标签
+- `draft`：设为 `true` 时不会发布
+
+## 部署
+
+目标仓库建议使用：
 
 ```text
-├── public/
-├── src/
-│   ├── assets/
-│   ├── components/
-│   ├── content/
-│   ├── layouts/
-│   └── pages/
-├── astro.config.mjs
-├── README.md
-├── package.json
-└── tsconfig.json
+J1syan/J1syan.github.io
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+首次推送：
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+```bash
+cd /home/j1syan/Documents/J1syan.github.io
+git branch -M main
+git remote add origin git@github.com:J1syan/J1syan.github.io.git
+git add .
+git commit -m "init blog"
+git push -u origin main
+```
 
-The `src/content/` directory contains "collections" of related Markdown and MDX documents. Use `getCollection()` to retrieve posts from `src/content/blog/`, and type-check your frontmatter using an optional schema. See [Astro's Content Collections docs](https://docs.astro.build/en/guides/content-collections/) to learn more.
+推送后，在 GitHub 仓库的 `Settings -> Pages` 中选择 `GitHub Actions` 作为部署来源。之后每次推送到 `main` 分支都会自动部署。
 
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Check out [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
-
-## Credit
-
-This theme is based off of the lovely [Bear Blog](https://github.com/HermanMartinus/bearblog/).
+更详细的使用说明见 [docs/使用文档.md](docs/使用文档.md)。

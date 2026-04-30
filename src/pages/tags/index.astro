@@ -1,0 +1,39 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Footer from '../../components/Footer.astro';
+import Header from '../../components/Header.astro';
+import { SITE_DESCRIPTION } from '../../consts';
+import { getPublishedPosts, getTags, tagUrl } from '../../lib/blog';
+
+const posts = await getPublishedPosts();
+const tags = getTags(posts);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title="标签" description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<header class="page-header">
+				<p class="eyebrow">Tags</p>
+				<h1>标签</h1>
+				<p>用更细的关键词串联文章。</p>
+			</header>
+
+			<div class="taxonomy-list">
+				{
+					tags.map((tag) => (
+						<a href={tagUrl(tag.name)}>
+							<span>{tag.name}</span>
+							<strong>{tag.count}</strong>
+						</a>
+					))
+				}
+			</div>
+		</main>
+		<Footer />
+	</body>
+</html>
