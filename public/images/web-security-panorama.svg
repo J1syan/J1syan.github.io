@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 800" font-family="system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif">
+  <defs>
+    <style>
+      .center { fill: #1e40af; }
+      .center-text { fill: white; font-size: 18px; font-weight: 600; text-anchor: middle; }
+      .process { fill: #dbeafe; stroke: #3b82f6; stroke-width: 2; }
+      .process-text { fill: #1e40af; font-size: 14px; text-anchor: middle; }
+      .vuln { fill: #fef2f2; stroke: #ef4444; stroke-width: 2; }
+      .vuln-text { fill: #dc2626; font-size: 14px; font-weight: 500; text-anchor: middle; }
+      .arrow { stroke: #64748b; stroke-width: 2; fill: none; marker-end: url(#arrowhead); }
+      .arrow-inner { stroke: #94a3b8; stroke-width: 1.5; fill: none; marker-end: url(#arrowhead-small); }
+      .title { fill: #0f172a; font-size: 22px; font-weight: 700; text-anchor: middle; }
+      .subtitle { fill: #475569; font-size: 14px; text-anchor: middle; }
+      .attacker { fill: #f0fdf4; stroke: #22c55e; stroke-width: 2; }
+      .attacker-text { fill: #166534; font-size: 15px; font-weight: 600; text-anchor: middle; }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+    </marker>
+    <marker id="arrowhead-small" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#94a3b8" />
+    </marker>
+  </defs>
+
+  <!-- Title -->
+  <text x="700" y="40" class="title">Web 安全漏洞全景图</text>
+  <text x="700" y="62" class="subtitle">攻击者输入 → 服务端处理方式 → 漏洞类型</text>
+
+  <!-- Attacker icon (top) -->
+  <rect x="620" y="80" width="160" height="40" rx="20" class="attacker" />
+  <text x="700" y="105" class="attacker-text">🎯 攻击者输入</text>
+
+  <!-- Arrow from attacker to center -->
+  <line x1="700" y1="120" x2="700" y2="230" class="arrow" />
+
+  <!-- Center circle -->
+  <circle cx="700" cy="280" r="55" class="center" />
+  <text x="700" y="272" class="center-text">服务端</text>
+  <text x="700" y="295" class="center-text">如何处理?</text>
+
+  <!-- 11 branches, evenly distributed in an arc -->
+  <!-- Using positions on a semi-circle from left to right -->
+
+  <!-- Branch 1: 拼接到 SQL -->
+  <line x1="660" y1="240" x2="120" y2="400" class="arrow-inner" />
+  <rect x="50" y="400" width="140" height="36" rx="18" class="process" />
+  <text x="120" y="423" class="process-text">拼接到 SQL</text>
+  <line x1="120" y1="436" x2="120" y2="470" class="arrow-inner" />
+  <rect x="50" y="470" width="140" height="36" rx="18" class="vuln" />
+  <text x="120" y="493" class="vuln-text">SQL 注入</text>
+
+  <!-- Branch 2: 输出到 HTML -->
+  <line x1="665" y1="235" x2="245" y2="400" class="arrow-inner" />
+  <rect x="175" y="400" width="140" height="36" rx="18" class="process" />
+  <text x="245" y="423" class="process-text">输出到 HTML</text>
+  <line x1="245" y1="436" x2="245" y2="470" class="arrow-inner" />
+  <rect x="175" y="470" width="140" height="36" rx="18" class="vuln" />
+  <text x="245" y="493" class="vuln-text">XSS</text>
+
+  <!-- Branch 3: 存储为文件 -->
+  <line x1="672" y1="232" x2="370" y2="400" class="arrow-inner" />
+  <rect x="300" y="400" width="140" height="36" rx="18" class="process" />
+  <text x="370" y="423" class="process-text">存储为文件</text>
+  <line x1="370" y1="436" x2="370" y2="470" class="arrow-inner" />
+  <rect x="300" y="470" width="140" height="36" rx="18" class="vuln" />
+  <text x="370" y="493" class="vuln-text">文件上传 RCE</text>
+
+  <!-- Branch 4: 发起 HTTP 请求 -->
+  <line x1="680" y1="230" x2="495" y2="400" class="arrow-inner" />
+  <rect x="425" y="400" width="140" height="36" rx="18" class="process" />
+  <text x="495" y="423" class="process-text">发起 HTTP 请求</text>
+  <line x1="495" y1="436" x2="495" y2="470" class="arrow-inner" />
+  <rect x="425" y="470" width="140" height="36" rx="18" class="vuln" />
+  <text x="495" y="493" class="vuln-text">SSRF</text>
+
+  <!-- Branch 5: 执行系统命令 -->
+  <line x1="690" y1="228" x2="620" y2="400" class="arrow-inner" />
+  <rect x="550" y="400" width="140" height="36" rx="18" class="process" />
+  <text x="620" y="423" class="process-text">执行系统命令</text>
+  <line x1="620" y1="436" x2="620" y2="470" class="arrow-inner" />
+  <rect x="550" y="470" width="140" height="36" rx="18" class="vuln" />
+  <text x="620" y="493" class="vuln-text">命令注入</text>
+
+  <!-- Branch 6: 解析 XML (center-right) -->
+  <line x1="710" y1="228" x2="745" y2="400" class="arrow-inner" />
+  <rect x="675" y="400" width="140" height="36" rx="18" class="process" />
+  <text x="745" y="423" class="process-text">解析 XML</text>
+  <line x1="745" y1="436" x2="745" y2="470" class="arrow-inner" />
+  <rect x="675" y="470" width="140" height="36" rx="18" class="vuln" />
+  <text x="745" y="493" class="vuln-text">XXE</text>
+
+  <!-- Branch 7: 反序列化对象 -->
+  <line x1="720" y1="230" x2="870" y2="400" class="arrow-inner" />
+  <rect x="800" y="400" width="140" height="36" rx="18" class="process" />
+  <text x="870" y="423" class="process-text">反序列化对象</text>
+  <line x1="870" y1="436" x2="870" y2="470" class="arrow-inner" />
+  <rect x="800" y="470" width="140" height="36" rx="18" class="vuln" />
+  <text x="870" y="493" class="vuln-text">反序列化漏洞</text>
+
+  <!-- Branch 8: 仅校验身份 -->
+  <line x1="728" y1="232" x2="995" y2="400" class="arrow-inner" />
+  <rect x="925" y="400" width="140" height="36" rx="18" class="process" />
+  <text x="995" y="423" class="process-text">仅校验身份</text>
+  <line x1="995" y1="436" x2="995" y2="470" class="arrow-inner" />
+  <rect x="925" y="470" width="140" height="36" rx="18" class="vuln" />
+  <text x="995" y="493" class="vuln-text">越权访问</text>
+
+  <!-- Branch 9: Cookie 自动携带 -->
+  <line x1="735" y1="235" x2="1120" y2="400" class="arrow-inner" />
+  <rect x="1050" y="400" width="140" height="36" rx="18" class="process" />
+  <text x="1120" y="423" class="process-text">Cookie 自动携带</text>
+  <line x1="1120" y1="436" x2="1120" y2="470" class="arrow-inner" />
+  <rect x="1050" y="470" width="140" height="36" rx="18" class="vuln" />
+  <text x="1120" y="493" class="vuln-text">CSRF</text>
+
+  <!-- Branch 10: 配置不当 -->
+  <line x1="740" y1="240" x2="1245" y2="400" class="arrow-inner" />
+  <rect x="1175" y="400" width="140" height="36" rx="18" class="process" />
+  <text x="1245" y="423" class="process-text">配置不当</text>
+  <line x1="1245" y1="436" x2="1245" y2="470" class="arrow-inner" />
+  <rect x="1175" y="470" width="140" height="36" rx="18" class="vuln" />
+  <text x="1245" y="493" class="vuln-text">安全配置错误</text>
+
+  <!-- Branch 11: 认证缺陷 -->
+  <line x1="740" y1="248" x2="1310" y2="380" class="arrow-inner" />
+  <rect x="1240" y="470" width="140" height="36" rx="18" class="process" />
+  <text x="1310" y="493" class="process-text">认证缺陷</text>
+  <line x1="1310" y1="506" x2="1310" y2="540" class="arrow-inner" />
+  <rect x="1240" y="540" width="140" height="36" rx="18" class="vuln" />
+  <text x="1310" y="563" class="vuln-text">认证失败</text>
+
+  <!-- Legend / Footer -->
+  <rect x="480" y="620" width="18" height="18" rx="9" fill="#dbeafe" stroke="#3b82f6" stroke-width="1.5" />
+  <text x="505" y="634" fill="#475569" font-size="13">处理场景</text>
+  <rect x="580" y="620" width="18" height="18" rx="9" fill="#fef2f2" stroke="#ef4444" stroke-width="1.5" />
+  <text x="605" y="634" fill="#475569" font-size="13">漏洞类型</text>
+  <line x1="680" y1="629" x2="698" y2="629" stroke="#64748b" stroke-width="2" />
+  <polygon points="698,626 706,629 698,632" fill="#64748b" />
+  <text x="712" y="634" fill="#475569" font-size="13">数据流向</text>
+</svg>

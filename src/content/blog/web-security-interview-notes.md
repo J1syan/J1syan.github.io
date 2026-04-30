@@ -14,7 +14,7 @@ Web 安全的核心矛盾只有一句话：
 
 所有漏洞都围绕这个矛盾展开——攻击者想办法让服务端把恶意数据当作代码执行，防御者想办法把数据和代码彻底隔离。
 
-![Web 安全漏洞全景图](/images/web-security-panorama.png)
+![Web 安全漏洞全景图](/images/web-security-panorama.svg)
 
 这张图不需要背，只需要理解一件事：
 
