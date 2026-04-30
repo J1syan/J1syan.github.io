@@ -15,39 +15,28 @@ Web 安全的核心矛盾只有一句话：
 所有漏洞都围绕这个矛盾展开——攻击者想办法让服务端把恶意数据当作代码执行，防御者想办法把数据和代码彻底隔离。
 
 ```mermaid
-flowchart TD
-    A[攻击者输入] --> B{服务端如何处理?}
+graph TD
+    A["攻击者输入"] --> B{"服务端如何处理?"}
 
-    B -->|拼接到 SQL 语句| C[SQL 注入]
-    B -->|输出到 HTML 页面| D[XSS]
-    B -->|当作文件存储并解析| E[文件上传 RCE]
-    B -->|发起后端 HTTP 请求| F[SSRF]
-    B -->|当作系统命令执行| G[命令注入]
-    B -->|解析 XML 外部实体| H[XXE]
-    B -->|反序列化为对象| I[反序列化漏洞]
+    B -->|"拼接到 SQL 语句"| C["SQL 注入"]
+    B -->|"输出到 HTML 页面"| D["XSS"]
+    B -->|"当作文件存储并解析"| E["文件上传 RCE"]
+    B -->|"发起后端 HTTP 请求"| F["SSRF"]
+    B -->|"当作系统命令执行"| G["命令注入"]
+    B -->|"解析 XML 外部实体"| H["XXE"]
+    B -->|"反序列化为对象"| I["反序列化漏洞"]
+    B -->|"仅校验身份未校验权限"| J["越权访问"]
+    B -->|"依赖 Cookie 自动携带"| K["CSRF"]
+    B -->|"配置不当 / 组件过旧"| L["安全配置错误"]
+    B -->|"认证逻辑缺陷"| M["认证失败"]
 
-    B -->|仅校验身份未校验权限| J[越权访问]
-    B -->|依赖 Cookie 自动携带| K[CSRF]
-    B -->|配置不当 / 组件过旧| L[安全配置错误]
-    B -->|认证逻辑缺陷| M[认证失败]
+    C & D & E & G & H & I --> N1["数据与代码未分离"]
+    F --> N2["信任边界被突破"]
+    J --> N3["访问控制失效"]
+    K --> N4["浏览器机制被滥用"]
+    L & M --> N5["纵深防御缺失"]
 
-    C --> N[数据与代码未分离]
-    D --> N
-    E --> N
-    F --> O[信任边界被突破]
-    G --> N
-    H --> N
-    I --> N
-    J --> P[访问控制失效]
-    K --> Q[浏览器机制被滥用]
-    L --> R[纵深防御缺失]
-    M --> R
-
-    N --> S[核心原则: 输入校验 + 输出编码 + 最小权限]
-    O --> S
-    P --> S
-    Q --> S
-    R --> S
+    N1 & N2 & N3 & N4 & N5 --> S["核心原则: 输入校验 + 输出编码 + 最小权限"]
 ```
 
 这张图不需要背，只需要理解一件事：
@@ -65,18 +54,18 @@ flowchart TD
 #### 攻击面分析
 
 ```mermaid
-flowchart LR
-    A[越权漏洞] --> B[水平越权]
-    A --> C[垂直越权]
-    A --> D[上下文越权]
+graph LR
+    A["越权漏洞"] --> B["水平越权"]
+    A --> C["垂直越权"]
+    A --> D["上下文越权"]
 
-    B --> B1[同级别用户数据互访]
+    B --> B1["同级别用户数据互访"]
     B1 --> B2["修改用户 ID 参数\n/api/user?id=1001 → id=1002"]
 
-    C --> C1[低权限获取高权限功能]
+    C --> C1["低权限获取高权限功能"]
     C1 --> C2["普通用户访问管理接口\n/admin/deleteUser"]
 
-    D --> D1[流程跳过 / 状态不一致]
+    D --> D1["流程跳过 / 状态不一致"]
     D1 --> D2["跳过支付步骤直接调用完成接口"]
 ```
 
@@ -221,7 +210,7 @@ factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true)
 #### 三种类型的本质区别
 
 ```mermaid
-flowchart TD
+graph TD
     A[XSS 跨站脚本攻击] --> B{恶意脚本存在哪?}
 
     B -->|不存在服务器中<br/>通过 URL 参数触发| C[反射型 XSS]
@@ -240,7 +229,7 @@ flowchart TD
 很多文章只给 Payload 列表，但不说为什么用这个。关键在于**你的输入出现在 HTML 的哪个位置**：
 
 ```mermaid
-flowchart LR
+graph LR
     A[用户输入] --> B{出现在哪?}
 
     B -->|HTML 标签内容| C[<div>用户输入</div>]
@@ -364,7 +353,7 @@ Token 设计的核心要求：
 文件上传不是"传个文件"这么简单，它是一整条攻击链：
 
 ```mermaid
-flowchart LR
+graph LR
     A[上传文件] --> B{通过校验?}
     B -->|被拦截| C[尝试绕过]
     B -->|通过| D[文件存储]
@@ -461,7 +450,7 @@ location /uploads/ {
 SSRF 的威力不在"让服务器发请求"，而在"服务器能访问到你访问不到的地方"。
 
 ```mermaid
-flowchart TD
+graph TD
     A[攻击者] -->|"url=http://169.254.169.254"| B[目标服务器]
 
     B --> C[内网服务发现]
@@ -560,7 +549,7 @@ management:
 Java 反序列化时，会从字节流中重建对象。如果这个类有 `readObject()` 方法，反序列化时会自动调用。攻击者可以构造包含恶意逻辑的序列化对象，在 `readObject()` 中执行任意代码。
 
 ```mermaid
-flowchart LR
+graph LR
     A[攻击者构造<br/>恶意序列化数据] --> B[发送到目标应用]
     B --> C[应用调用<br/>ObjectInputStream.readObject]
     C --> D[反序列化触发<br/>Gadget Chain]
@@ -609,7 +598,7 @@ mapper.activateDefaultTyping(mapper.getPolymorphicTypeValidator(),
 Burp 不是"点一下自动扫描"的工具。它的核心价值是**让你看到和控制每一个 HTTP 请求**。
 
 ```mermaid
-flowchart TD
+graph TD
     A[浏览器配置代理 127.0.0.1:8080] --> B[Burp Proxy 拦截]
 
     B --> C{测试目标}
@@ -760,7 +749,7 @@ class URLCrawler:
 ### HTTP 安全响应头
 
 ```mermaid
-flowchart TD
+graph TD
     A[HTTP 安全头] --> B[CSP 内容安全策略]
     A --> D[X-Content-Type-Options]
     A --> E[X-Frame-Options]
