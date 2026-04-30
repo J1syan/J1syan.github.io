@@ -62,7 +62,7 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 
 		<script is:inline type="module">
 			(async () => {
-				const blocks = document.querySelectorAll('pre > code.language-mermaid');
+				const blocks = document.querySelectorAll('pre[data-language="mermaid"]');
 				if (blocks.length === 0) return;
 
 				const { default: mermaid } = await import('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs');
@@ -74,9 +74,8 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 					fontFamily: 'inherit',
 				});
 
-				for (const codeEl of blocks) {
-					const pre = codeEl.parentElement;
-					const graphDef = codeEl.textContent.trim();
+				for (const pre of blocks) {
+					const graphDef = pre.textContent.trim();
 					const id = 'mermaid-' + Math.random().toString(36).substring(2, 9);
 
 					try {
@@ -215,9 +214,10 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 		overflow-x: auto;
 	}
 
-	.prose pre.mermaid {
-		background: transparent;
+	.prose pre[data-language="mermaid"] {
+		background: transparent !important;
 		padding: 0;
 		border-radius: 0;
+		overflow: visible;
 	}
 </style>
