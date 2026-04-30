@@ -26,6 +26,9 @@ jobs:
       - name: Build with Astro
         uses: withastro/action@v6
 
+      - name: Add .nojekyll
+        run: touch dist/.nojekyll
+
   deploy:
     name: Deploy
     needs: build
