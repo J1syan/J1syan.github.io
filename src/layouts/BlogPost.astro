@@ -65,14 +65,6 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 				const blocks = document.querySelectorAll('pre[data-language="mermaid"]');
 				if (blocks.length === 0) return;
 
-				// 为每个代码块添加加载提示
-				for (const pre of blocks) {
-					const loading = document.createElement('div');
-					loading.className = 'mermaid-loading';
-					loading.textContent = '正在渲染图表...';
-					pre.parentNode.insertBefore(loading, pre);
-				}
-
 				const { default: mermaid } = await import('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs');
 
 				mermaid.initialize({
@@ -82,31 +74,34 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 					fontFamily: 'inherit',
 				});
 
-				for (let i = 0; i < blocks.length; i++) {
-					const pre = blocks[i];
-					const loading = pre.parentNode.querySelector('.mermaid-loading');
-					if (loading) loading.remove();
-
-					// 从 Shiki 的 span.line 提取文本
+				for (const pre of blocks) {
+					// Shiki 会把每行包裹在 <span class="line"> 中
+					// 直接从 line spans 提取文本，避免 textContent 带来的额外换行
 					const lines = pre.querySelectorAll('span.line');
 					let graphDef;
 					if (lines.length > 0) {
-						graphDef = Array.from(lines).map(l => l.textContent).join('\n').trim();
+						graphDef = Array.from(lines)
+							.map(line => line.textContent)
+							.join('\n')
+							.trim();
 					} else {
 						graphDef = pre.textContent.trim();
 					}
 
+					const id = 'mermaid-' + Math.random().toString(36).substring(2, 9);
+
 					try {
-						const { svg } = await mermaid.render('mermaid-' + i, graphDef);
+						const { svg } = await mermaid.render(id, graphDef);
 						const wrapper = document.createElement('div');
 						wrapper.className = 'mermaid';
 						wrapper.innerHTML = svg;
 						pre.replaceWith(wrapper);
 					} catch (err) {
 						console.error('Mermaid render error:', err);
+						// 渲染失败时保留原始代码块并显示错误提示
 						const errorDiv = document.createElement('div');
-						errorDiv.style.cssText = 'color:#ef4444;padding:1rem;background:#fef2f2;border-radius:6px;margin:1rem 0;';
-						errorDiv.innerHTML = `<strong>Mermaid 渲染失败：</strong><pre style="margin-top:0.5rem;font-size:0.85rem;overflow-x:auto;">${err.message}</pre>`;
+						errorDiv.style.cssText = 'color: #ef4444; padding: 1rem; background: #fef2f2; border-radius: 6px; margin: 1rem 0;';
+						errorDiv.innerHTML = `<strong>Mermaid 渲染失败：</strong><pre style="margin-top: 0.5rem; font-size: 0.85rem; overflow-x: auto;">${err.message}</pre>`;
 						pre.parentNode.insertBefore(errorDiv, pre);
 					}
 				}
@@ -241,33 +236,5 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 		padding: 0;
 		border-radius: 0;
 		overflow: visible;
-	}
-
-	.prose .mermaid-loading {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 0.5rem;
-		padding: 2rem;
-		color: rgb(var(--gray));
-		font-size: 0.9rem;
-		background: var(--card-bg);
-		border: 1px dashed var(--border-color);
-		border-radius: 8px;
-		margin: 1.5rem 0;
-	}
-
-	.prose .mermaid-loading::before {
-		content: '';
-		width: 16px;
-		height: 16px;
-		border: 2px solid var(--border-color);
-		border-top-color: var(--accent-color);
-		border-radius: 50%;
-		animation: mermaid-spin 0.8s linear infinite;
-	}
-
-	@keyframes mermaid-spin {
-		to { transform: rotate(360deg); }
 	}
 </style>
