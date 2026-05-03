@@ -53,6 +53,8 @@ const isProtected = !!post.data.password;
 			if (input.value === window.__postPassword) {
 				gate.style.display = 'none';
 				content.style.display = 'block';
+				// 通知 mastery-tracker 等脚本内容已解锁
+				document.dispatchEvent(new CustomEvent('content:revealed'));
 			} else {
 				error.style.display = 'block';
 				input.value = '';

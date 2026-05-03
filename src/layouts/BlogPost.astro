@@ -59,6 +59,10 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 			</article>
 		</main>
 		<Footer />
+		<script>
+			import { initMasteryTracker } from '../scripts/mastery-tracker';
+			document.addEventListener('DOMContentLoaded', () => initMasteryTracker());
+		</script>
 	</body>
 </html>
 
@@ -188,5 +192,135 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 		padding: 0;
 		border-radius: 0;
 		overflow: visible;
+	}
+
+	/* ===== Mastery Tracker 样式 ===== */
+
+	#mastery-toolbar {
+		margin-bottom: 1.5rem;
+		padding: 1rem 1.25rem;
+		background: var(--card-bg);
+		border: 1px solid var(--border-color);
+		border-radius: 10px;
+	}
+
+	.mastery-progress {
+		height: 8px;
+		background: rgb(var(--gray-light) / 0.3);
+		border-radius: 4px;
+		overflow: hidden;
+		margin-bottom: 0.6rem;
+	}
+
+	.mastery-progress-fill {
+		height: 100%;
+		width: 0%;
+		background: rgb(var(--accent));
+		border-radius: 4px;
+		transition: width 0.4s ease;
+	}
+
+	.mastery-toolbar-info {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.mastery-count {
+		font-size: 0.9rem;
+		color: rgb(var(--gray));
+		font-weight: 500;
+	}
+
+	.mastery-toggle {
+		font-size: 0.85rem;
+		padding: 0.3rem 0.75rem;
+		border: 1px solid var(--border-color);
+		border-radius: 6px;
+		background: transparent;
+		color: rgb(var(--gray));
+		cursor: pointer;
+		transition: all 0.2s;
+	}
+
+	.mastery-toggle:hover {
+		border-color: rgb(var(--accent));
+		color: rgb(var(--accent));
+	}
+
+	/* 复选框样式 */
+	.problem-heading {
+		display: flex;
+		align-items: center;
+		gap: 0.5rem;
+	}
+
+	.mastery-check {
+		position: relative;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 20px;
+		height: 20px;
+		flex-shrink: 0;
+		cursor: pointer;
+	}
+
+	.mastery-check input {
+		position: absolute;
+		opacity: 0;
+		width: 0;
+		height: 0;
+	}
+
+	.mastery-check .checkmark {
+		width: 18px;
+		height: 18px;
+		border: 2px solid rgb(var(--gray-light));
+		border-radius: 4px;
+		transition: all 0.2s;
+	}
+
+	.mastery-check input:checked + .checkmark {
+		background: rgb(var(--accent));
+		border-color: rgb(var(--accent));
+	}
+
+	.mastery-check input:checked + .checkmark::after {
+		content: '';
+		position: absolute;
+		left: 5px;
+		top: 2px;
+		width: 5px;
+		height: 9px;
+		border: solid white;
+		border-width: 0 2px 2px 0;
+		transform: rotate(45deg);
+	}
+
+	.mastery-check:hover .checkmark {
+		border-color: rgb(var(--accent));
+	}
+
+	/* 已掌握标题样式 */
+	.problem-heading.mastered .problem-title {
+		text-decoration: line-through;
+		color: rgb(var(--gray));
+		opacity: 0.7;
+	}
+
+	/* 已掌握 section 样式 */
+	.problem-section.mastered {
+		opacity: 0.5;
+		transition: opacity 0.3s;
+	}
+
+	.problem-section.mastered:hover {
+		opacity: 0.85;
+	}
+
+	/* 隐藏已掌握 */
+	.prose.hide-mastered .problem-section.mastered {
+		display: none;
 	}
 </style>
