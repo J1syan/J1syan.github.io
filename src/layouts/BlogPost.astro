@@ -193,9 +193,10 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 		border-radius: 0;
 		overflow: visible;
 	}
+</style>
 
-	/* ===== Mastery Tracker 样式 ===== */
-
+<!-- Mastery Tracker 样式必须用 is:global，因为 DOM 元素由 JS 动态创建，不含 Astro scoped 属性 -->
+<style is:global>
 	#mastery-toolbar {
 		margin-bottom: 1.5rem;
 		padding: 1rem 1.25rem;
@@ -248,7 +249,6 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 		color: rgb(var(--accent));
 	}
 
-	/* 复选框样式 */
 	.problem-heading {
 		display: flex;
 		align-items: center;
@@ -302,14 +302,12 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 		border-color: rgb(var(--accent));
 	}
 
-	/* 已掌握标题样式 */
 	.problem-heading.mastered .problem-title {
 		text-decoration: line-through;
 		color: rgb(var(--gray));
 		opacity: 0.7;
 	}
 
-	/* 已掌握 section 样式 */
 	.problem-section.mastered {
 		opacity: 0.5;
 		transition: opacity 0.3s;
@@ -319,7 +317,6 @@ const { title, description, pubDate, updatedDate, category, tags, heroImage } = 
 		opacity: 0.85;
 	}
 
-	/* 隐藏已掌握 */
 	.prose.hide-mastered .problem-section.mastered {
 		display: none;
 	}
