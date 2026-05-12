@@ -10,30 +10,57 @@ tags: ['Redis', '八股文', '数据结构', '面试']
 
 Redis 不是传统意义上的"只提供 KV 的数据库"，它更像一个"**数据结构服务器**"：你给它不同的访问模式，它就用不同的底层编码去承载。
 
-```mermaid
-flowchart LR
-    A[业务场景] --> B{访问模式是什么?}
-    B -->|简单键值读写 / 计数 / 二进制数据| S[String]
-    B -->|对象属性 / 表结构| H[Hash]
-    B -->|两端入队出队 / 阻塞队列| L[List]
-    B -->|去重 / 成员判断 / 集合运算| T[Set]
-    B -->|排序 / 排名 / TopN / 延迟队列| Z[ZSet]
-    B -->|追加日志 / 消费组 / 事件流| X[Stream]
-
-    S --> S1[SDS / int / embstr]
-    H --> H1[listpack / hashtable]
-    L --> L1[quicklist + listpack]
-    T --> T1[intset / hashtable]
-    Z --> Z1[listpack / dict + skiplist]
-    X --> X1[radix tree + listpack]
-
-    S1 --> C[匹配 CPU 缓存友好、低开销操作]
-    H1 --> C
-    L1 --> C
-    T1 --> C
-    Z1 --> C
-    X1 --> C
-```
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 420" style="max-width:100%;height:auto;font-family:system-ui,sans-serif;font-size:13px;">
+  <defs>
+    <marker id="arrow1" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#555"/></marker>
+  </defs>
+  <!-- 业务场景 -->
+  <rect x="10" y="180" width="100" height="36" rx="6" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="60" y="203" text-anchor="middle" fill="#1976d2" font-weight="bold">业务场景</text>
+  <!-- 访问模式 -->
+  <rect x="160" y="180" width="140" height="36" rx="6" fill="#fff3e0" stroke="#f57c00"/>
+  <text x="230" y="203" text-anchor="middle" fill="#e65100">访问模式是什么?</text>
+  <line x1="110" y1="198" x2="160" y2="198" stroke="#555" marker-end="url(#arrow1)"/>
+  <!-- 数据结构列 -->
+  <rect x="380" y="10" width="80" height="30" rx="5" fill="#c8e6c9" stroke="#388e3c"/><text x="420" y="30" text-anchor="middle" fill="#2e7d32">String</text>
+  <rect x="380" y="55" width="80" height="30" rx="5" fill="#c8e6c9" stroke="#388e3c"/><text x="420" y="75" text-anchor="middle" fill="#2e7d32">Hash</text>
+  <rect x="380" y="100" width="80" height="30" rx="5" fill="#c8e6c9" stroke="#388e3c"/><text x="420" y="120" text-anchor="middle" fill="#2e7d32">List</text>
+  <rect x="380" y="145" width="80" height="30" rx="5" fill="#c8e6c9" stroke="#388e3c"/><text x="420" y="165" text-anchor="middle" fill="#2e7d32">Set</text>
+  <rect x="380" y="190" width="80" height="30" rx="5" fill="#c8e6c9" stroke="#388e3c"/><text x="420" y="210" text-anchor="middle" fill="#2e7d32">ZSet</text>
+  <rect x="380" y="235" width="80" height="30" rx="5" fill="#c8e6c9" stroke="#388e3c"/><text x="420" y="255" text-anchor="middle" fill="#2e7d32">Stream</text>
+  <!-- 箭头从访问模式到数据结构 -->
+  <line x1="300" y1="190" x2="380" y2="25" stroke="#777" marker-end="url(#arrow1)"/>
+  <line x1="300" y1="193" x2="380" y2="70" stroke="#777" marker-end="url(#arrow1)"/>
+  <line x1="300" y1="196" x2="380" y2="115" stroke="#777" marker-end="url(#arrow1)"/>
+  <line x1="300" y1="199" x2="380" y2="160" stroke="#777" marker-end="url(#arrow1)"/>
+  <line x1="300" y1="202" x2="380" y2="205" stroke="#777" marker-end="url(#arrow1)"/>
+  <line x1="300" y1="205" x2="380" y2="250" stroke="#777" marker-end="url(#arrow1)"/>
+  <!-- 底层编码列 -->
+  <rect x="530" y="10" width="180" height="30" rx="5" fill="#f3e5f5" stroke="#7b1fa2"/><text x="620" y="30" text-anchor="middle" fill="#6a1b9a" font-size="12">SDS / int / embstr</text>
+  <rect x="530" y="55" width="180" height="30" rx="5" fill="#f3e5f5" stroke="#7b1fa2"/><text x="620" y="75" text-anchor="middle" fill="#6a1b9a" font-size="12">listpack / hashtable</text>
+  <rect x="530" y="100" width="180" height="30" rx="5" fill="#f3e5f5" stroke="#7b1fa2"/><text x="620" y="120" text-anchor="middle" fill="#6a1b9a" font-size="12">quicklist + listpack</text>
+  <rect x="530" y="145" width="180" height="30" rx="5" fill="#f3e5f5" stroke="#7b1fa2"/><text x="620" y="165" text-anchor="middle" fill="#6a1b9a" font-size="12">intset / hashtable</text>
+  <rect x="530" y="190" width="180" height="30" rx="5" fill="#f3e5f5" stroke="#7b1fa2"/><text x="620" y="210" text-anchor="middle" fill="#6a1b9a" font-size="12">dict + skiplist</text>
+  <rect x="530" y="235" width="180" height="30" rx="5" fill="#f3e5f5" stroke="#7b1fa2"/><text x="620" y="255" text-anchor="middle" fill="#6a1b9a" font-size="12">radix tree + listpack</text>
+  <!-- 箭头从数据结构到编码 -->
+  <line x1="460" y1="25" x2="530" y2="25" stroke="#777" marker-end="url(#arrow1)"/>
+  <line x1="460" y1="70" x2="530" y2="70" stroke="#777" marker-end="url(#arrow1)"/>
+  <line x1="460" y1="115" x2="530" y2="115" stroke="#777" marker-end="url(#arrow1)"/>
+  <line x1="460" y1="160" x2="530" y2="160" stroke="#777" marker-end="url(#arrow1)"/>
+  <line x1="460" y1="205" x2="530" y2="205" stroke="#777" marker-end="url(#arrow1)"/>
+  <line x1="460" y1="250" x2="530" y2="250" stroke="#777" marker-end="url(#arrow1)"/>
+  <!-- 汇聚到性能目标 -->
+  <rect x="530" y="310" width="250" height="36" rx="6" fill="#e8f5e9" stroke="#388e3c"/>
+  <text x="655" y="333" text-anchor="middle" fill="#2e7d32" font-size="12">匹配 CPU 缓存友好、低开销操作</text>
+  <line x1="620" y1="265" x2="655" y2="310" stroke="#388e3c" marker-end="url(#arrow1)"/>
+  <!-- 标签说明 -->
+  <text x="300" y="30" text-anchor="middle" fill="#777" font-size="11">简单键值/计数</text>
+  <text x="300" y="75" text-anchor="middle" fill="#777" font-size="11">对象属性/表结构</text>
+  <text x="300" y="120" text-anchor="middle" fill="#777" font-size="11">两端入队出队</text>
+  <text x="300" y="165" text-anchor="middle" fill="#777" font-size="11">去重/集合运算</text>
+  <text x="300" y="210" text-anchor="middle" fill="#777" font-size="11">排序/排名/TopN</text>
+  <text x="300" y="255" text-anchor="middle" fill="#777" font-size="11">追加日志/消费组</text>
+</svg>
 
 核心推导逻辑其实很简单：
 
@@ -134,10 +161,14 @@ SDS 不是 C 语言那种以 `\0` 结尾的普通字符串，而是"**带长度�
 
 String 正好就是"一个 key 对应一个 blob"。
 
-```mermaid
-flowchart LR
-    K[cache:user:1001] --> V[整块 JSON / 序列化对象]
-```
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 50" style="max-width:100%;height:auto;font-family:system-ui,sans-serif;font-size:13px;">
+  <defs><marker id="ac" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#555"/></marker></defs>
+  <rect x="5" y="10" width="140" height="30" rx="5" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="75" y="30" text-anchor="middle" fill="#1976d2">cache:user:1001</text>
+  <line x1="145" y1="25" x2="210" y2="25" stroke="#555" marker-end="url(#ac)"/>
+  <rect x="210" y="10" width="220" height="30" rx="5" fill="#fff3e0" stroke="#f57c00"/>
+  <text x="320" y="30" text-anchor="middle" fill="#e65100">整块 JSON / 序列化对象</text>
+</svg>
 
 它不需要 Redis 理解对象内部字段，只要把整块值拿进来、拿出去就行，所以性能和模型都非常直接。
 
@@ -206,15 +237,23 @@ quicklist 可以理解为：
 - 每个节点内部数据连续，减少单个元素的指针开销。
 - 比"纯链表"更省内存，比"纯数组"更适合两端操作。
 
-```mermaid
-flowchart LR
-    A[quicklist] --> B[节点1]
-    A --> C[节点2]
-    A --> D[节点3]
-    B --> B1[listpack]
-    C --> C1[listpack]
-    D --> D1[listpack]
-```
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 160" style="max-width:100%;height:auto;font-family:system-ui,sans-serif;font-size:13px;">
+  <defs><marker id="aq" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#555"/></marker></defs>
+  <rect x="165" y="5" width="100" height="30" rx="5" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="215" y="25" text-anchor="middle" fill="#1976d2" font-weight="bold">quicklist</text>
+  <rect x="20" y="70" width="80" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="60" y="89" text-anchor="middle" fill="#e65100" font-size="12">节点1</text>
+  <rect x="170" y="70" width="80" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="210" y="89" text-anchor="middle" fill="#e65100" font-size="12">节点2</text>
+  <rect x="320" y="70" width="80" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="360" y="89" text-anchor="middle" fill="#e65100" font-size="12">节点3</text>
+  <line x1="215" y1="35" x2="60" y2="70" stroke="#555" marker-end="url(#aq)"/>
+  <line x1="215" y1="35" x2="210" y2="70" stroke="#555" marker-end="url(#aq)"/>
+  <line x1="215" y1="35" x2="360" y2="70" stroke="#555" marker-end="url(#aq)"/>
+  <rect x="20" y="120" width="80" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="60" y="139" text-anchor="middle" fill="#2e7d32" font-size="12">listpack</text>
+  <rect x="170" y="120" width="80" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="210" y="139" text-anchor="middle" fill="#2e7d32" font-size="12">listpack</text>
+  <rect x="320" y="120" width="80" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="360" y="139" text-anchor="middle" fill="#2e7d32" font-size="12">listpack</text>
+  <line x1="60" y1="98" x2="60" y2="120" stroke="#555" marker-end="url(#aq)"/>
+  <line x1="210" y1="98" x2="210" y2="120" stroke="#555" marker-end="url(#aq)"/>
+  <line x1="360" y1="98" x2="360" y2="120" stroke="#555" marker-end="url(#aq)"/>
+</svg>
 
 ### 2.4 为什么它能支撑这些场景
 
@@ -283,13 +322,19 @@ Hash 常见有两类底层编码：
 - 小 Hash 更像"压缩后的字段数组"。
 - 大 Hash 更像"真正的哈希表"。
 
-```mermaid
-flowchart TB
-    H[Hash] --> S[小对象]
-    H --> L[大对象]
-    S --> LP[listpack 紧凑存储]
-    L --> HT[hashtable 快速查找]
-```
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 160" style="max-width:100%;height:auto;font-family:system-ui,sans-serif;font-size:13px;">
+  <defs><marker id="ah" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#555"/></marker></defs>
+  <rect x="150" y="5" width="80" height="30" rx="5" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="190" y="25" text-anchor="middle" fill="#1976d2" font-weight="bold">Hash</text>
+  <rect x="50" y="65" width="80" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="90" y="84" text-anchor="middle" fill="#e65100" font-size="12">小对象</text>
+  <rect x="250" y="65" width="80" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="290" y="84" text-anchor="middle" fill="#e65100" font-size="12">大对象</text>
+  <line x1="175" y1="35" x2="90" y2="65" stroke="#555" marker-end="url(#ah)"/>
+  <line x1="205" y1="35" x2="290" y2="65" stroke="#555" marker-end="url(#ah)"/>
+  <rect x="20" y="120" width="140" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="90" y="139" text-anchor="middle" fill="#2e7d32" font-size="12">listpack 紧凑存储</text>
+  <rect x="220" y="120" width="160" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="300" y="139" text-anchor="middle" fill="#2e7d32" font-size="12">hashtable 快速查找</text>
+  <line x1="90" y1="93" x2="90" y2="120" stroke="#555" marker-end="url(#ah)"/>
+  <line x1="290" y1="93" x2="300" y2="120" stroke="#555" marker-end="url(#ah)"/>
+</svg>
 
 ### 3.4 为什么它能支撑这些场景
 
@@ -349,13 +394,19 @@ Set 常见有两种编码：
 - **hashtable**
   - 更一般的情况使用哈希表。
 
-```mermaid
-flowchart TB
-    S[Set] --> I[整数且较小]
-    S --> H[其他情况]
-    I --> IS[intset]
-    H --> HT[hashtable]
-```
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 160" style="max-width:100%;height:auto;font-family:system-ui,sans-serif;font-size:13px;">
+  <defs><marker id="as" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#555"/></marker></defs>
+  <rect x="140" y="5" width="70" height="30" rx="5" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="175" y="25" text-anchor="middle" fill="#1976d2" font-weight="bold">Set</text>
+  <rect x="30" y="60" width="110" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="85" y="79" text-anchor="middle" fill="#e65100" font-size="12">整数且较小</text>
+  <rect x="210" y="60" width="110" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="265" y="79" text-anchor="middle" fill="#e65100" font-size="12">其他情况</text>
+  <line x1="160" y1="35" x2="85" y2="60" stroke="#555" marker-end="url(#as)"/>
+  <line x1="190" y1="35" x2="265" y2="60" stroke="#555" marker-end="url(#as)"/>
+  <rect x="40" y="115" width="90" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="85" y="134" text-anchor="middle" fill="#2e7d32" font-size="12">intset</text>
+  <rect x="220" y="115" width="90" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="265" y="134" text-anchor="middle" fill="#2e7d32" font-size="12">hashtable</text>
+  <line x1="85" y1="88" x2="85" y2="115" stroke="#555" marker-end="url(#as)"/>
+  <line x1="265" y1="88" x2="265" y2="115" stroke="#555" marker-end="url(#as)"/>
+</svg>
 
 ### 4.4 为什么它能支撑这些场景
 
@@ -420,13 +471,19 @@ ZSet 的核心是 **dict + skiplist** 组合。
 - `dict` 负责从 member 快速找到 score。
 - `skiplist` 负责按 score 有序遍历、范围查询、排名查询。
 
-```mermaid
-flowchart TB
-    Z[ZSet] --> D[dict]
-    Z --> S[skiplist]
-    D --> A[member -> score 快速查找]
-    S --> B[按 score 排序 / 范围查询 / rank]
-```
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 160" style="max-width:100%;height:auto;font-family:system-ui,sans-serif;font-size:13px;">
+  <defs><marker id="az" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#555"/></marker></defs>
+  <rect x="170" y="5" width="70" height="30" rx="5" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="205" y="25" text-anchor="middle" fill="#1976d2" font-weight="bold">ZSet</text>
+  <rect x="50" y="60" width="80" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="90" y="79" text-anchor="middle" fill="#e65100" font-size="12">dict</text>
+  <rect x="280" y="60" width="80" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="320" y="79" text-anchor="middle" fill="#e65100" font-size="12">skiplist</text>
+  <line x1="185" y1="35" x2="90" y2="60" stroke="#555" marker-end="url(#az)"/>
+  <line x1="220" y1="35" x2="320" y2="60" stroke="#555" marker-end="url(#az)"/>
+  <rect x="10" y="115" width="180" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="100" y="134" text-anchor="middle" fill="#2e7d32" font-size="12">member→score 快速查找</text>
+  <rect x="220" y="115" width="190" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="315" y="134" text-anchor="middle" fill="#2e7d32" font-size="12">按score排序/范围/rank</text>
+  <line x1="90" y1="88" x2="100" y2="115" stroke="#555" marker-end="url(#az)"/>
+  <line x1="320" y1="88" x2="315" y2="115" stroke="#555" marker-end="url(#az)"/>
+</svg>
 
 小对象时，Redis 也会使用更紧凑的编码方式，以降低内存成本。
 
@@ -513,13 +570,19 @@ Stream 的底层常见是：
 - 还能高效裁剪旧数据
 - 还支持 consumer group 的状态管理
 
-```mermaid
-flowchart TB
-    X[Stream] --> R[radix tree]
-    R --> M[macro node]
-    M --> L[listpack entries]
-    X --> G[consumer group / pending state]
-```
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 200" style="max-width:100%;height:auto;font-family:system-ui,sans-serif;font-size:13px;">
+  <defs><marker id="ax" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#555"/></marker></defs>
+  <rect x="160" y="5" width="90" height="30" rx="5" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="205" y="25" text-anchor="middle" fill="#1976d2" font-weight="bold">Stream</text>
+  <rect x="50" y="60" width="100" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="100" y="79" text-anchor="middle" fill="#e65100" font-size="12">radix tree</text>
+  <rect x="260" y="60" width="140" height="28" rx="4" fill="#f3e5f5" stroke="#7b1fa2"/><text x="330" y="79" text-anchor="middle" fill="#6a1b9a" font-size="12">consumer group/pending</text>
+  <line x1="185" y1="35" x2="100" y2="60" stroke="#555" marker-end="url(#ax)"/>
+  <line x1="225" y1="35" x2="330" y2="60" stroke="#555" marker-end="url(#ax)"/>
+  <rect x="50" y="115" width="100" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="100" y="134" text-anchor="middle" fill="#e65100" font-size="12">macro node</text>
+  <line x1="100" y1="88" x2="100" y2="115" stroke="#555" marker-end="url(#ax)"/>
+  <rect x="30" y="168" width="140" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="100" y="187" text-anchor="middle" fill="#2e7d32" font-size="12">listpack entries</text>
+  <line x1="100" y1="143" x2="100" y2="168" stroke="#555" marker-end="url(#ax)"/>
+</svg>
 
 ### 6.4 为什么它能支撑这些场景
 
@@ -654,11 +717,17 @@ Bitmap 最适合的场景特征是：
 
 这样一个月的签到记录只要几十个 bit 就够了，空间成本极低。
 
-```mermaid
-flowchart LR
-    U[用户行为] --> B[某一位 0/1]
-    B --> S[String 底层连续内存]
-```
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 50" style="max-width:100%;height:auto;font-family:system-ui,sans-serif;font-size:13px;">
+  <defs><marker id="ab" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#555"/></marker></defs>
+  <rect x="5" y="10" width="100" height="30" rx="5" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="55" y="30" text-anchor="middle" fill="#1976d2">用户行为</text>
+  <line x1="105" y1="25" x2="155" y2="25" stroke="#555" marker-end="url(#ab)"/>
+  <rect x="155" y="10" width="120" height="30" rx="5" fill="#fff3e0" stroke="#f57c00"/>
+  <text x="215" y="30" text-anchor="middle" fill="#e65100">某一位 0/1</text>
+  <line x1="275" y1="25" x2="325" y2="25" stroke="#555" marker-end="url(#ab)"/>
+  <rect x="325" y="10" width="180" height="30" rx="5" fill="#c8e6c9" stroke="#388e3c"/>
+  <text x="415" y="30" text-anchor="middle" fill="#2e7d32">String 底层连续内存</text>
+</svg>
 
 ### 常用 Redis 命令
 
@@ -738,12 +807,17 @@ Geo 的核心仍然依赖 ZSet 的有序能力，只是 Redis 帮你把"经纬�
 
 Redis 把这套能力抽象到了 Geo 命令层，底层继续利用 ZSet 的排序和范围查询能力，所以能做得又快又简单。
 
-```mermaid
-flowchart TB
-    G[Geo 查询] --> E[经纬度编码]
-    E --> Z[ZSet 有序存储]
-    Z --> Q[半径查询 / 距离排序 / 附近检索]
-```
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 220" style="max-width:100%;height:auto;font-family:system-ui,sans-serif;font-size:13px;">
+  <defs><marker id="ag" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#555"/></marker></defs>
+  <rect x="90" y="5" width="100" height="30" rx="5" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="140" y="25" text-anchor="middle" fill="#1976d2" font-weight="bold">Geo 查询</text>
+  <rect x="80" y="60" width="120" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="140" y="79" text-anchor="middle" fill="#e65100" font-size="12">经纬度编码</text>
+  <line x1="140" y1="35" x2="140" y2="60" stroke="#555" marker-end="url(#ag)"/>
+  <rect x="70" y="115" width="140" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="140" y="134" text-anchor="middle" fill="#2e7d32" font-size="12">ZSet 有序存储</text>
+  <line x1="140" y1="88" x2="140" y2="115" stroke="#555" marker-end="url(#ag)"/>
+  <rect x="30" y="170" width="220" height="28" rx="4" fill="#f3e5f5" stroke="#7b1fa2"/><text x="140" y="189" text-anchor="middle" fill="#6a1b9a" font-size="12">半径查询/距离排序/附近检索</text>
+  <line x1="140" y1="143" x2="140" y2="170" stroke="#555" marker-end="url(#ag)"/>
+</svg>
 
 ### 常用 Redis 命令
 
@@ -832,11 +906,17 @@ HyperLogLog 的核心不是把每个元素都存下来，而是保存一组概�
 
 所以 HyperLogLog 特别适合做报表类、监控类、趋势类统计。
 
-```mermaid
-flowchart LR
-    A[海量用户 ID] --> H[HyperLogLog 特征]
-    H --> C[近似去重计数]
-```
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 50" style="max-width:100%;height:auto;font-family:system-ui,sans-serif;font-size:13px;">
+  <defs><marker id="al" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#555"/></marker></defs>
+  <rect x="5" y="10" width="130" height="30" rx="5" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="70" y="30" text-anchor="middle" fill="#1976d2">海量用户 ID</text>
+  <line x1="135" y1="25" x2="185" y2="25" stroke="#555" marker-end="url(#al)"/>
+  <rect x="185" y="10" width="150" height="30" rx="5" fill="#fff3e0" stroke="#f57c00"/>
+  <text x="260" y="30" text-anchor="middle" fill="#e65100">HyperLogLog 特征</text>
+  <line x1="335" y1="25" x2="385" y2="25" stroke="#555" marker-end="url(#al)"/>
+  <rect x="385" y="10" width="130" height="30" rx="5" fill="#c8e6c9" stroke="#388e3c"/>
+  <text x="450" y="30" text-anchor="middle" fill="#2e7d32">近似去重计数</text>
+</svg>
 
 ### 常用 Redis 命令
 
@@ -869,25 +949,49 @@ stringRedisTemplate.opsForHyperLogLog().union("uv:month:2026-04", "uv:2026-04-01
 
 ## 总结：Redis 数据结构选型思维导图
 
-```mermaid
-flowchart TD
-    A[你要解决什么问题?] --> B[存整块值?]
-    A --> C[存对象字段?]
-    A --> D[排队 / 消息流?]
-    A --> E[去重 / 集合运算?]
-    A --> F[排序 / 排名?]
-    A --> G[事件流 / 消费组?]
-    A --> H[布尔标记?]
-    A --> I[海量去重计数?]
-    A --> J[地理位置?]
-
-    B --> S[String]
-    C --> H2[Hash]
-    D --> L[List]
-    E --> S2[Set]
-    F --> Z2[ZSet]
-    G --> X2[Stream]
-    H --> B2[Bitmap]
-    I --> H3[HyperLogLog]
-    J --> G2[Geo]
-```
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 480" style="max-width:100%;height:auto;font-family:system-ui,sans-serif;font-size:13px;">
+  <defs><marker id="af" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto"><polygon points="0 0, 10 3.5, 0 7" fill="#555"/></marker></defs>
+  <!-- 中心问题 -->
+  <rect x="220" y="5" width="220" height="36" rx="6" fill="#e3f2fd" stroke="#1976d2"/>
+  <text x="330" y="28" text-anchor="middle" fill="#1976d2" font-weight="bold">你要解决什么问题?</text>
+  <!-- 左列问题 -->
+  <rect x="20" y="70" width="130" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="85" y="89" text-anchor="middle" fill="#e65100" font-size="12">存整块值?</text>
+  <rect x="20" y="115" width="130" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="85" y="134" text-anchor="middle" fill="#e65100" font-size="12">存对象字段?</text>
+  <rect x="20" y="160" width="130" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="85" y="179" text-anchor="middle" fill="#e65100" font-size="12">排队/消息流?</text>
+  <rect x="20" y="205" width="130" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="85" y="224" text-anchor="middle" fill="#e65100" font-size="12">去重/集合运算?</text>
+  <rect x="20" y="250" width="130" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="85" y="269" text-anchor="middle" fill="#e65100" font-size="12">排序/排名?</text>
+  <rect x="20" y="295" width="130" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="85" y="314" text-anchor="middle" fill="#e65100" font-size="12">事件流/消费组?</text>
+  <rect x="20" y="340" width="130" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="85" y="359" text-anchor="middle" fill="#e65100" font-size="12">布尔标记?</text>
+  <rect x="20" y="385" width="130" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="85" y="404" text-anchor="middle" fill="#e65100" font-size="12">海量去重计数?</text>
+  <rect x="20" y="430" width="130" height="28" rx="4" fill="#fff3e0" stroke="#f57c00"/><text x="85" y="449" text-anchor="middle" fill="#e65100" font-size="12">地理位置?</text>
+  <!-- 从中心到左列的连线 -->
+  <line x1="220" y1="30" x2="150" y2="84" stroke="#777" marker-end="url(#af)"/>
+  <line x1="220" y1="30" x2="150" y2="129" stroke="#777" marker-end="url(#af)"/>
+  <line x1="220" y1="30" x2="150" y2="174" stroke="#777" marker-end="url(#af)"/>
+  <line x1="220" y1="35" x2="150" y2="219" stroke="#777" marker-end="url(#af)"/>
+  <line x1="220" y1="35" x2="150" y2="264" stroke="#777" marker-end="url(#af)"/>
+  <line x1="220" y1="35" x2="150" y2="309" stroke="#777" marker-end="url(#af)"/>
+  <line x1="220" y1="38" x2="150" y2="354" stroke="#777" marker-end="url(#af)"/>
+  <line x1="220" y1="40" x2="150" y2="399" stroke="#777" marker-end="url(#af)"/>
+  <line x1="220" y1="41" x2="150" y2="444" stroke="#777" marker-end="url(#af)"/>
+  <!-- 右列答案 -->
+  <rect x="540" y="70" width="120" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="600" y="89" text-anchor="middle" fill="#2e7d32" font-weight="bold">String</text>
+  <rect x="540" y="115" width="120" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="600" y="134" text-anchor="middle" fill="#2e7d32" font-weight="bold">Hash</text>
+  <rect x="540" y="160" width="120" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="600" y="179" text-anchor="middle" fill="#2e7d32" font-weight="bold">List</text>
+  <rect x="540" y="205" width="120" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="600" y="224" text-anchor="middle" fill="#2e7d32" font-weight="bold">Set</text>
+  <rect x="540" y="250" width="120" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="600" y="269" text-anchor="middle" fill="#2e7d32" font-weight="bold">ZSet</text>
+  <rect x="540" y="295" width="120" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="600" y="314" text-anchor="middle" fill="#2e7d32" font-weight="bold">Stream</text>
+  <rect x="540" y="340" width="120" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="600" y="359" text-anchor="middle" fill="#2e7d32" font-weight="bold">Bitmap</text>
+  <rect x="540" y="385" width="120" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="600" y="404" text-anchor="middle" fill="#2e7d32" font-weight="bold">HyperLogLog</text>
+  <rect x="540" y="430" width="120" height="28" rx="4" fill="#c8e6c9" stroke="#388e3c"/><text x="600" y="449" text-anchor="middle" fill="#2e7d32" font-weight="bold">Geo</text>
+  <!-- 从左列到右列的连线 -->
+  <line x1="150" y1="84" x2="540" y2="84" stroke="#388e3c" stroke-dasharray="4" marker-end="url(#af)"/>
+  <line x1="150" y1="129" x2="540" y2="129" stroke="#388e3c" stroke-dasharray="4" marker-end="url(#af)"/>
+  <line x1="150" y1="174" x2="540" y2="174" stroke="#388e3c" stroke-dasharray="4" marker-end="url(#af)"/>
+  <line x1="150" y1="219" x2="540" y2="219" stroke="#388e3c" stroke-dasharray="4" marker-end="url(#af)"/>
+  <line x1="150" y1="264" x2="540" y2="264" stroke="#388e3c" stroke-dasharray="4" marker-end="url(#af)"/>
+  <line x1="150" y1="309" x2="540" y2="309" stroke="#388e3c" stroke-dasharray="4" marker-end="url(#af)"/>
+  <line x1="150" y1="354" x2="540" y2="354" stroke="#388e3c" stroke-dasharray="4" marker-end="url(#af)"/>
+  <line x1="150" y1="399" x2="540" y2="399" stroke="#388e3c" stroke-dasharray="4" marker-end="url(#af)"/>
+  <line x1="150" y1="444" x2="540" y2="444" stroke="#388e3c" stroke-dasharray="4" marker-end="url(#af)"/>
+</svg>
