@@ -1,7 +1,7 @@
 ---
 title: 'Caffeine LoadingCache.get() 源码调用链解析'
 description: '从 get(key) 一路追到 loadFromRedisOrSource，理清 CacheLoader 是如何被 Caffeine 调用的。'
-pubDate: '2025-06-12'
+pubDate: '2026-06-13'
 category: 'Java'
 tags: ['Caffeine', '缓存', '源码分析', 'Java']
 ---
@@ -93,6 +93,8 @@ public interface LoadingCache<K, V> extends Cache<K, V> {
 
 IDEA 点击只能看到接口声明。`Ctrl+Alt+B` 找实现。
 
+![LoadingCache.get() 接口声明](/images/caffeine-loadingcache/1.png)
+
 ---
 
 ### 第2层：LocalLoadingCache.get(key)
@@ -115,6 +117,8 @@ interface LocalLoadingCache<K, V> extends LocalManualCache<K, V>, LoadingCache<K
 - `cache()` 返回底层 ConcurrentHashMap
 - `computeIfAbsent`：key 存在直接返回，不存在才执行 mappingFunction
 - `mappingFunction()` 是接口方法，返回值从哪来？`Ctrl+Alt+B` 找实现
+
+![LocalLoadingCache.get() 实现](/images/caffeine-loadingcache/2.png)
 
 ---
 
@@ -161,6 +165,9 @@ public Function<K, V> mappingFunction() {
 
 `newMappingFunction(loader)` 里面做了什么？
 
+![BoundedLocalLoadingCache 构造](/images/caffeine-loadingcache/3.png)
+![newMappingFunction 实现](/images/caffeine-loadingcache/4.png)
+
 ---
 
 ### 第4层：newMappingFunction — 把 CacheLoader 包装成 Function
@@ -199,6 +206,8 @@ public Object load(String key) {
 ```
 
 到这里，调用链从 Caffeine 框架回到你的业务代码。
+
+![isBounded 判断逻辑](/images/caffeine-loadingcache/5.png)
 
 ---
 
