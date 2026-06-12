@@ -6,7 +6,7 @@ category: 'Java'
 tags: ['Caffeine', '缓存', '源码分析', 'Java']
 ---
 
-## 起点：你写的代码
+## 起点：示例代码
 
 ```java
 // TwoLevelCache.java 构造方法
@@ -45,7 +45,7 @@ public V get(String key) {
 }
 ```
 
-问题：`caffeineCache.get(key)` 怎么走到你写的 `loadFromRedisOrSource`？
+问题：`caffeineCache.get(key)` 怎么走到 `loadFromRedisOrSource`？
 
 ---
 
@@ -56,7 +56,7 @@ public V get(String key) {
 Java 语法规定接口不能直接 `new`，但 `new 接口(){...}` 会由编译器自动生成一个实现类：
 
 ```java
-// 你写的
+// 示例
 new CacheLoader<String, Object>() {
     @Override
     public Object load(String key) { ... }
@@ -64,7 +64,7 @@ new CacheLoader<String, Object>() {
     public Object reload(String key, Object oldValue) { ... }
 }
 
-// 编译器等价生成（你看不到，但确实存在）
+// 编译器等价生成（运行时不可见，但确实存在）
 class AnonymousCacheLoader implements CacheLoader<String, Object> {
     @Override
     public Object load(String key) { return loadFromRedisOrSource(key, sourceLoader); }
@@ -74,7 +74,7 @@ class AnonymousCacheLoader implements CacheLoader<String, Object> {
 // 然后：.build(new AnonymousCacheLoader());
 ```
 
-所以 `new CacheLoader(){...}` 创建的是**你写的加载逻辑对象**，传给 Caffeine，由 Caffeine 在合适的时机调用。
+所以 `new CacheLoader(){...}` 创建的是**加载逻辑对象**，传给 Caffeine，由 Caffeine 在合适的时机调用。
 
 ---
 
@@ -177,7 +177,7 @@ public Function<K, V> mappingFunction() {
 static <K, V> Function<K, V> newMappingFunction(CacheLoader<? super K, V> cacheLoader) {
     return key -> {
         try {
-            return cacheLoader.load(key);  // 调用你写的 load()
+            return cacheLoader.load(key);  // 调用自定义 load()
         } catch (RuntimeException e) {
             throw e;
         } catch (InterruptedException e) {
@@ -192,11 +192,11 @@ static <K, V> Function<K, V> newMappingFunction(CacheLoader<? super K, V> cacheL
 
 为什么需要包装？`computeIfAbsent` 需要的参数类型是 `Function<K, V>`，不是 `CacheLoader`。
 
-`cacheLoader.load(key)` 里的 `cacheLoader` 是谁？——你 `new CacheLoader(){...}` 创建的匿名类对象。
+`cacheLoader.load(key)` 里的 `cacheLoader` 是谁？——`new CacheLoader(){...}` 创建的匿名类对象。
 
 ---
 
-### 第5层：你写的 load()
+### 第5层：自定义 load()
 
 ```java
 @Override
@@ -205,7 +205,7 @@ public Object load(String key) {
 }
 ```
 
-到这里，调用链从 Caffeine 框架回到你的业务代码。
+到这里，调用链从 Caffeine 框架回到业务代码。
 
 ![isBounded 判断逻辑](/images/caffeine-loadingcache/5.png)
 
@@ -281,7 +281,7 @@ BoundedLocalLoadingCache.mappingFunction()
         lambda 执行：cacheLoader.load(key)
             │
             ▼
-        你写的 load()
+        自定义 load()
             │
             ▼
         loadFromRedisOrSource(key, sourceLoader)
@@ -299,12 +299,12 @@ LocalLoadingCache.refresh(key)
     ├── 缓存有旧值 → cacheLoader().asyncReload(key, oldValue, executor)
     │       │
     │       ▼
-    │   你写的 reload() → loadFromRedisOnly(key)  // 只查 Redis
+    │   自定义 reload() → loadFromRedisOnly(key)  // 只查 Redis
     │
     └── 缓存无值   → cacheLoader().asyncLoad(key, executor)
             │
             ▼
-        你写的 load() → loadFromRedisOrSource(key, sourceLoader)
+        自定义 load() → loadFromRedisOrSource(key, sourceLoader)
 ```
 
 ---
@@ -313,7 +313,7 @@ LocalLoadingCache.refresh(key)
 
 **每一步只追一个问题，用 Ctrl+Alt+B 找实现类：**
 
-| 你看到的 | 问题 | 操作 |
+| 当前位置 | 问题 | 操作 |
 |---------|------|------|
 | `LoadingCache.get(key)` | 谁实现了 get？ | `Ctrl+Alt+B` |
 | `mappingFunction()` | 谁实现了？ | `Ctrl+Alt+B` |
@@ -326,9 +326,9 @@ LocalLoadingCache.refresh(key)
 
 ## 核心总结
 
-- `new CacheLoader(){...}` 创建的是匿名内部类，装着你写的加载逻辑
+- `new CacheLoader(){...}` 创建的是匿名内部类，装着自定义加载逻辑
 - `build(loader)` 时，Caffeine 把 loader 包装成 Function 存到成员变量
 - `get(key)` 调用 `computeIfAbsent(key, mappingFunction())`，`mappingFunction()` 只是 getter
-- 未命中时执行 Function，内部调用 `cacheLoader.load(key)`，走到你的代码
+- 未命中时执行 Function，内部调用 `cacheLoader.load(key)`，走到业务代码
 - `load()`：首次加载/过期重新加载 → Redis + 回源
 - `reload()`：异步刷新 → 只查 Redis，不回源，异常保留旧值
