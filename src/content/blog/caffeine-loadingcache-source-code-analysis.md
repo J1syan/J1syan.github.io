@@ -45,11 +45,11 @@ public V get(String key) {
 }
 ```
 
-问题：`caffeineCache.get(key)` 怎么走到 `loadFromRedisOrSource`？
+目标：理清 `caffeineCache.get(key)` 到 `loadFromRedisOrSource` 的完整调用链路。
 
 ---
 
-## 先搞清楚：new CacheLoader(){...} 是什么
+## new CacheLoader(){...} 的本质
 
 `new CacheLoader<String, Object>() {...}` 不是实例化接口，是创建**匿名内部类**。
 
@@ -190,9 +190,7 @@ static <K, V> Function<K, V> newMappingFunction(CacheLoader<? super K, V> cacheL
 }
 ```
 
-为什么需要包装？`computeIfAbsent` 需要的参数类型是 `Function<K, V>`，不是 `CacheLoader`。
-
-`cacheLoader.load(key)` 里的 `cacheLoader` 是谁？——`new CacheLoader(){...}` 创建的匿名类对象。
+包装的原因：`computeIfAbsent` 需要的参数类型是 `Function<K, V>`，不是 `CacheLoader`。`cacheLoader.load(key)` 里的 `cacheLoader` 是 `new CacheLoader(){...}` 创建的匿名类对象。
 
 ---
 
@@ -311,16 +309,16 @@ LocalLoadingCache.refresh(key)
 
 ## 源码追踪方法
 
-**每一步只追一个问题，用 Ctrl+Alt+B 找实现类：**
+**用 Ctrl+Alt+B 逐层找实现类：**
 
-| 当前位置 | 问题 | 操作 |
-|---------|------|------|
+| 当前位置 | 要确认的内容 | 操作 |
+|---------|-------------|------|
 | `LoadingCache.get(key)` | 谁实现了 get？ | `Ctrl+Alt+B` |
 | `mappingFunction()` | 谁实现了？ | `Ctrl+Alt+B` |
 | `newMappingFunction(loader)` | 里面做了什么？ | 点进去看 |
 | `cacheLoader.load(key)` | cacheLoader 是谁？ | 就是构造时传入的匿名类 |
 
-不要一次跳多层，一层一层追，每步确认实现类/返回值。
+逐层跟踪，每层确认实现类/返回值。
 
 ---
 
