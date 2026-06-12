@@ -1,5 +1,5 @@
 /* ================================================
-   Modern Blog Styles - v2.0
+   Modern Blog Styles - v3.0
    ================================================ */
 
 :root {
@@ -8,7 +8,7 @@
   --accent-strong: 79, 70, 229;
   --accent-muted: 165, 180, 252;
 
-  /* Neutral Palette */
+  /* Neutral Palette (Light) */
   --background: 250, 250, 252;
   --surface: 255, 255, 255;
   --surface-raised: 248, 250, 252;
@@ -36,9 +36,27 @@
   --transition-slow: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Dark Mode */
+/* Dark Mode via data-theme */
+[data-theme="dark"] {
+  --accent: 129, 140, 248;
+  --accent-strong: 165, 180, 252;
+  --accent-muted: 99, 102, 241;
+  --background: 11, 15, 24;
+  --surface: 18, 22, 32;
+  --surface-raised: 28, 33, 48;
+  --black: 248, 250, 252;
+  --gray: 148, 163, 184;
+  --gray-light: 51, 65, 85;
+  --gray-dark: 203, 213, 225;
+  --border: 30, 41, 59;
+  --border-hover: 51, 65, 85;
+  --shadow-card: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 4px 24px -2px rgba(0, 0, 0, 0.15);
+  --shadow-card-hover: 0 4px 16px 0 rgba(99, 102, 241, 0.08), 0 8px 32px -2px rgba(0, 0, 0, 0.25);
+}
+
+/* Auto dark if OS dark AND no data-theme set */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --accent: 129, 140, 248;
     --accent-strong: 165, 180, 252;
     --accent-muted: 99, 102, 241;
@@ -53,15 +71,6 @@
     --border-hover: 51, 65, 85;
     --shadow-card: 0 2px 8px 0 rgba(0, 0, 0, 0.2), 0 4px 24px -2px rgba(0, 0, 0, 0.15);
     --shadow-card-hover: 0 4px 16px 0 rgba(99, 102, 241, 0.08), 0 8px 32px -2px rgba(0, 0, 0, 0.25);
-  }
-
-  pre {
-    background: rgb(30, 35, 50);
-    border-color: rgb(55, 65, 90);
-  }
-
-  pre > code {
-    color: rgb(215, 220, 235);
   }
 }
 
