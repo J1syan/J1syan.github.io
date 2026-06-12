@@ -39,11 +39,11 @@ export function getTags(posts: BlogPost[]) {
 }
 
 export function getPostsByCategory(posts: BlogPost[], category: string) {
-	return posts.filter((post) => post.data.category === category);
+	return sortPosts(posts.filter((post) => post.data.category === category));
 }
 
 export function getPostsByTag(posts: BlogPost[], tag: string) {
-	return posts.filter((post) => post.data.tags.includes(tag));
+	return sortPosts(posts.filter((post) => post.data.tags.includes(tag)));
 }
 
 export function postUrl(post: BlogPost) {
