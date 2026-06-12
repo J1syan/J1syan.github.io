@@ -11,6 +11,11 @@ export function sortPosts(posts: BlogPost[]) {
 	return posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 }
 
+export function estimateReadingTime(body: string): number {
+	const chars = body.replace(/\s/g, '').length;
+	return Math.max(1, Math.round(chars / 500));
+}
+
 export function getCategories(posts: BlogPost[]) {
 	const counts = new Map<string, number>();
 

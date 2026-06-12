@@ -796,6 +796,68 @@ main {
 }
 
 /* ================================================
+   Stats Bar
+   ================================================ */
+
+.stats-bar {
+  display: flex;
+  gap: 2rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid rgb(var(--border));
+  border-radius: 14px;
+  background: rgb(var(--surface));
+  margin-top: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.stat-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: rgb(var(--accent));
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: rgb(var(--gray));
+}
+
+@media (max-width: 640px) {
+  .stats-bar {
+    gap: 1.25rem;
+    padding: 1rem;
+  }
+  .stat-number {
+    font-size: 1.25rem;
+  }
+}
+
+/* ================================================
+   Category Color Badges
+   ================================================ */
+
+.post-meta .category[data-cat="源码分析"] { background: rgba(99, 102, 241, 0.1); color: rgb(99, 102, 241); }
+.post-meta .category[data-cat="实习"] { background: rgba(245, 158, 11, 0.1); color: rgb(245, 158, 11); }
+.post-meta .category[data-cat="Java"] { background: rgba(234, 88, 12, 0.1); color: rgb(234, 88, 12); }
+.post-meta .category[data-cat="算法"] { background: rgba(16, 185, 129, 0.1); color: rgb(16, 185, 129); }
+.post-meta .category[data-cat="数据库"] { background: rgba(59, 130, 246, 0.1); color: rgb(59, 130, 246); }
+.post-meta .category[data-cat="安全"] { background: rgba(239, 68, 68, 0.1); color: rgb(239, 68, 68); }
+.post-meta .category[data-cat="其他"] { background: rgba(148, 163, 184, 0.15); color: rgb(100, 116, 139); }
+
+.post-meta .category {
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+/* ================================================
    Password Gate
    ================================================ */
 
