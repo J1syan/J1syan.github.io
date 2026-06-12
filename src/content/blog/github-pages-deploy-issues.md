@@ -3,7 +3,7 @@ title: '博客部署问题'
 description: '记录 Astro 博客部署到 GitHub Pages 过程中遇到的问题及解决方法，包含 Mermaid 渲染问题与最终 SVG 替代方案。'
 pubDate: '2026-04-30'
 category: '其他'
-tags: ['GitHub Pages', 'Astro', '部署', 'Mermaid', 'SVG', '图表渲染']
+tags: ['Astro', '部署']
 ---
 
 ## 问题一：Mermaid 图表无法渲染

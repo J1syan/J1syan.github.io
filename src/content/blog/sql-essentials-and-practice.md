@@ -3,17 +3,17 @@ title: 'SQL 必知必会：基础知识与 50 题实战'
 description: 'SQL 核心知识点速查 + 牛客网 SQL 必知必会 50 道题完整题解，覆盖检索、过滤、聚合、子查询、联结、组合查询等考点。'
 pubDate: '2026-05-04'
 category: '数据库'
-tags: ['SQL', 'MySQL', '牛客网', '聚合函数', 'JOIN', '子查询', 'GROUP BY']
+tags: ['SQL', 'MySQL']
 ---
 
 ## 配套资料
 
 本文所有题目基于牛客网 [SQL 必知必会](https://www.nowcoder.com/exam/oj/ta?tpId=298) 题库，本地练习用的建表脚本和数据如下：
 
-| 文件 | 说明 |
-|------|------|
-| `02_create_database.sql` | 建表脚本，含 5 张核心表 + 9 张扩展表 |
-| `03_insert_data.sql` | 初始测试数据 |
+| 文件 | 说明 | 下载 |
+|------|------|------|
+| `create_database.sql` | 建表脚本，含 5 张核心表 + 9 张扩展表 | [下载](/sql/create_database.sql) |
+| `insert_data.sql` | 初始测试数据 | [下载](/sql/insert_data.sql) |
 
 **5 张核心表结构：**
 

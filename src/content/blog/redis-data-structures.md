@@ -3,7 +3,7 @@ title: 'Redis 常用数据结构整理'
 description: '从访问模式出发，系统梳理 Redis 六大核心数据结构及 Bitmap、HyperLogLog、Geo 等扩展类型的底层原理与选型策略。'
 pubDate: '2026-04-30'
 category: 'Java八股'
-tags: ['Redis', '八股文', '数据结构', '面试']
+tags: ['Redis', '八股文', '数据结构']
 ---
 
 ## 一张图先看懂

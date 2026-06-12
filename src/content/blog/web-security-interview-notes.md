@@ -3,7 +3,7 @@ title: 'Web 安全核心漏洞与防御机制梳理'
 description: '从 OWASP Top 10 出发，系统梳理常见 Web 漏洞的攻击原理、挖掘思路与防御方案，涵盖文件上传、XSS、CSRF、SQL 注入、SSRF 等核心漏洞类型。'
 pubDate: '2026-04-30'
 category: '安全'
-tags: ['常见安全漏洞', 'OWASP Top 10', '文件上传漏洞', 'XSS', 'CSRF', 'SQL 注入', 'SSRF', 'Burp Suite', '纵深防御', '面试整理']
+tags: ['安全', '面试']
 ---
 
 ## 先画一张全景图

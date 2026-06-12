@@ -20,27 +20,30 @@ const posts = await getPublishedPosts();
 			<header class="page-header">
 				<p class="eyebrow">{SITE_TITLE}</p>
 				<h1>全部文章</h1>
-				<p>按发布时间倒序整理所有已发布文章。</p>
+				<p>按发布时间整理，共 {posts.length} 篇。</p>
 			</header>
 			<ul class="post-list">
 				{
 					posts.map((post) => (
 						<li>
 							<a href={postUrl(post)}>
-								<div>
+								<div class="card-content">
 									<h2>
 										{post.data.title}
 										{post.data.password && <span class="lock-badge" title="加密文章">&#128274;</span>}
 									</h2>
 									<p>{post.data.description}</p>
+									<div class="post-meta">
+										<span class="category">{post.data.category}</span>
+										<span class="divider">·</span>
+										<time><FormattedDate date={post.data.pubDate} /></time>
+									</div>
 									<div class="post-taxonomy">
-										<span>{post.data.category}</span>
-										{post.data.tags.map((tag) => <span>#{tag}</span>)}
+										{post.data.tags.slice(0, 4).map((tag) => (
+											<span>{tag}</span>
+										))}
 									</div>
 								</div>
-								<span>
-									<FormattedDate date={post.data.pubDate} />
-								</span>
 							</a>
 						</li>
 					))
@@ -49,8 +52,6 @@ const posts = await getPublishedPosts();
 			<div class="shortcut-links">
 				<a href="/categories/">按分类浏览</a>
 				<a href="/tags/">按标签浏览</a>
-				<a href={categoryUrl('学习笔记')}>学习笔记</a>
-				<a href={tagUrl('生活')}>生活</a>
 			</div>
 		</main>
 		<Footer />

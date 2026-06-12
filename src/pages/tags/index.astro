@@ -20,14 +20,14 @@ const tags = getTags(posts);
 			<header class="page-header">
 				<p class="eyebrow">Tags</p>
 				<h1>标签</h1>
-				<p>用更细的关键词串联文章。</p>
+				<p>共 {tags.length} 个标签，点击浏览相关文章。</p>
 			</header>
 
 			<div class="taxonomy-list">
 				{
 					tags.map((tag) => (
 						<a href={tagUrl(tag.name)}>
-							<span>{tag.name}</span>
+							<span>#{tag.name}</span>
 							<strong>{tag.count}</strong>
 						</a>
 					))

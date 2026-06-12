@@ -3,7 +3,7 @@ title: 'Spring Cloud 知识汇总'
 description: '基于 spring-cloud-learning-lab 实际项目代码整理的 Spring Cloud 微服务架构知识汇总，涵盖 Nacos、Sentinel、Gateway、OpenFeign、Seata 等核心组件。'
 pubDate: '2026-05-01'
 category: '技术栈'
-tags: ['Spring Cloud', 'Nacos', 'Sentinel', 'Gateway', 'OpenFeign', 'Seata', '微服务', '分布式']
+tags: ['Spring Cloud', '微服务']
 ---
 
 # Spring Cloud 知识汇总

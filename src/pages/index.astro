@@ -4,7 +4,7 @@ import Footer from '../components/Footer.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
-import { categoryUrl, getCategories, getPublishedPosts, getTags, postUrl, tagUrl } from '../lib/blog';
+import { getCategories, getTags, categoryUrl, getPublishedPosts, postUrl, tagUrl } from '../lib/blog';
 
 const posts = await getPublishedPosts();
 const recentPosts = posts.slice(0, 5);
@@ -23,7 +23,7 @@ const tags = getTags(posts);
 			<section class="hero">
 				<p class="eyebrow">J1syan 的个人博客</p>
 				<h1>{SITE_TITLE}</h1>
-				<p>{SITE_DESCRIPTION}。这里会记录技术学习、项目实践、读书笔记和日常观察。</p>
+				<p>记录技术学习、项目实践与读书笔记。</p>
 				<div class="actions">
 					<a class="button" href="/blog/">阅读文章</a>
 					<a href="/rss.xml">订阅 RSS</a>
@@ -40,13 +40,15 @@ const tags = getTags(posts);
 						recentPosts.map((post) => (
 							<li>
 								<a href={postUrl(post)}>
-									<div>
+									<div class="card-content">
 										<h3>{post.data.title}</h3>
 										<p>{post.data.description}</p>
+										<div class="post-meta">
+											<span class="category">{post.data.category}</span>
+											<span class="divider">·</span>
+											<time><FormattedDate date={post.data.pubDate} /></time>
+										</div>
 									</div>
-									<span>
-										<FormattedDate date={post.data.pubDate} />
-									</span>
 								</a>
 							</li>
 						))
@@ -70,7 +72,7 @@ const tags = getTags(posts);
 						<a href="/tags/">查看</a>
 					</div>
 					<div class="pill-list">
-						{tags.map((tag) => <a href={tagUrl(tag.name)}>{tag.name} ({tag.count})</a>)}
+						{tags.slice(0, 15).map((tag) => <a href={tagUrl(tag.name)}>{tag.name}</a>)}
 					</div>
 				</div>
 			</section>
