@@ -297,18 +297,10 @@ public Object load(String key) {
 
 ### 链路总结
 
-```
-build(loader)
-  → new BoundedLocalLoadingCache(self, loader)
-    → mappingFunction = newMappingFunction(loader)  // key -> cacheLoader.load(key)
-
-get(key)
-  → computeIfAbsent(key, mappingFunction())
-    → key不存在: mappingFunction.apply(key)
-      → cacheLoader.load(key)
-        → 自定义 load()
-          → loadFromRedisOrSource(key, sourceLoader)
-```
+| 阶段 | 调用链 |
+|------|--------|
+| 构造 | `Caffeine.build(loader)` → `new BoundedLocalLoadingCache(self, loader)` → `mappingFunction = newMappingFunction(loader)` |
+| 运行 | `get(key)` → `computeIfAbsent(key, mappingFunction())` → `mappingFunction.apply(key)` → `cacheLoader.load(key)` → `自定义 load()` → `loadFromRedisOrSource(...)` |
 
 ---
 
@@ -316,19 +308,10 @@ get(key)
 
 `refreshAfterWrite` 到期后，下次访问触发异步刷新：
 
-```
-LocalLoadingCache.refresh(key)
-    │
-    ├── 缓存有旧值 → cacheLoader().asyncReload(key, oldValue, executor)
-    │       │
-    │       ▼
-    │   自定义 reload() → loadFromRedisOnly(key)  // 只查 Redis
-    │
-    └── 缓存无值   → cacheLoader().asyncLoad(key, executor)
-            │
-            ▼
-        自定义 load() → loadFromRedisOrSource(key, sourceLoader)
-```
+| 场景 | 路径 |
+|------|------|
+| 缓存有旧值 | `refresh(key)` → `asyncReload(key, oldValue, executor)` → `自定义 reload()` → `loadFromRedisOnly(key)`（只查 Redis，异常保留旧值） |
+| 缓存无值 | `refresh(key)` → `asyncLoad(key, executor)` → `自定义 load()` → `loadFromRedisOrSource(key, sourceLoader)`（Redis + 回源） |
 
 ---
 
