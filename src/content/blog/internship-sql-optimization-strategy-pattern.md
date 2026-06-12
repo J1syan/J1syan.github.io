@@ -2,7 +2,7 @@
 title: '实习笔记1'
 description: '实习期间的两部分工作：SQL性能优化（2w+ms → 10ms）和策略模式重构（消除数百行if-else，新增字段零侵入）。'
 pubDate: '2026-06-12'
-category: '后端开发'
+category: '实习'
 tags: ['SQL', 'Java', 'Go', '性能优化', '实习']
 ---
 

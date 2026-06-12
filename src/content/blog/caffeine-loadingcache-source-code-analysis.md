@@ -2,7 +2,7 @@
 title: 'Caffeine LoadingCache.get() 源码调用链解析'
 description: '从 get(key) 一路追到 loadFromRedisOrSource，理清 CacheLoader 是如何被 Caffeine 调用的。'
 pubDate: '2026-06-13'
-category: 'Java'
+category: '源码分析'
 tags: ['Caffeine', '缓存', '源码分析', 'Java']
 ---
 
