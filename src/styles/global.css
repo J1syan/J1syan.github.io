@@ -196,7 +196,7 @@ pre > code {
   font-family: "SF Mono", "Fira Code", "Cascadia Mono", Consolas, monospace;
   font-size: 0.875rem;
   line-height: 1.7;
-  color: rgb(var(--gray-dark));
+  color: rgb(51, 65, 85);
 }
 
 /* Copy button for code blocks */
