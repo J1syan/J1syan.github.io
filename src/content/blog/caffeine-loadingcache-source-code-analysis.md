@@ -230,59 +230,84 @@ public LoadingCache<K1, V1> build(CacheLoader<? super K1, V1> loader) {
 
 ---
 
-## 完整调用链路图
+## 完整调用链路
+
+### 构造阶段
+
+**1. Caffeine.build(loader)**
+
+```java
+public LoadingCache<K1, V1> build(CacheLoader<? super K1, V1> loader) {
+    return isBounded() || refreshAfterWrite()
+        ? new BoundedLocalCache.BoundedLocalLoadingCache<>(self, loader)
+        : new UnboundedLocalCache.UnboundedLocalLoadingCache<>(self, loader);
+}
+```
+
+配了 `maximumSize` / `expireAfterWrite` / `refreshAfterWrite` → 创建 `BoundedLocalLoadingCache`。
+
+**2. BoundedLocalLoadingCache 构造**
+
+```java
+BoundedLocalLoadingCache(Caffeine<K, V> builder, CacheLoader<? super K, V> loader) {
+    super(builder, loader);
+    mappingFunction = newMappingFunction(loader);  // 包装成 Function
+}
+```
+
+**3. newMappingFunction**
+
+```java
+static <K, V> Function<K, V> newMappingFunction(CacheLoader<? super K, V> cacheLoader) {
+    return key -> cacheLoader.load(key);
+}
+```
+
+`computeIfAbsent` 需要 `Function<K, V>`，把 `CacheLoader.load()` 包装成 lambda 存到成员变量。
+
+### 运行阶段
+
+**4. get(key)**
+
+```java
+default V get(K key) {
+    return cache().computeIfAbsent(key, mappingFunction());
+}
+```
+
+`mappingFunction()` 只是 getter，取出构造时存的 Function。
+
+**5. 未命中 → 执行 lambda**
+
+```java
+key -> cacheLoader.load(key)
+```
+
+`cacheLoader` 就是 `new CacheLoader(){...}` 创建的匿名内部类，走到自定义的 `load()`。
+
+**6. 自定义 load()**
+
+```java
+public Object load(String key) {
+    return loadFromRedisOrSource(key, sourceLoader);
+}
+```
+
+到这里从 Caffeine 框架回到业务代码。
+
+### 链路总结
 
 ```
-【构造阶段】build(loader)
-    │
-    ▼
-Caffeine.build(loader)
-    │
-    ├── isBounded() || refreshAfterWrite() 为 true
-    │       │
-    │       ▼
-    │   new BoundedLocalLoadingCache(self, loader)
-    │       │
-    │       ▼
-    │   构造方法：
-    │     mappingFunction = newMappingFunction(loader)
-    │       │
-    │       ▼
-    │     return key -> cacheLoader.load(key)  // 包装成 Function
-    │
-    └── 否则
-            │
-            ▼
-        new UnboundedLocalLoadingCache(self, loader)
+build(loader)
+  → new BoundedLocalLoadingCache(self, loader)
+    → mappingFunction = newMappingFunction(loader)  // key -> cacheLoader.load(key)
 
-
-【运行阶段】caffeineCache.get(key)
-    │
-    ▼
-LoadingCache.get(key)                    // 接口声明
-    │  → Ctrl+Alt+B
-    ▼
-LocalLoadingCache.get(key)               // default 实现
-    │  cache().computeIfAbsent(key, mappingFunction())
-    │
-    │  mappingFunction() 返回值从哪来？
-    │  → Ctrl+Alt+B
-    ▼
-BoundedLocalLoadingCache.mappingFunction()
-    │  return mappingFunction;           // 取出成员变量
-    │
-    ├── key 存在 → 直接返回缓存值
-    │
-    └── key 不存在 → 执行 mappingFunction.apply(key)
-            │
-            ▼
-        lambda 执行：cacheLoader.load(key)
-            │
-            ▼
-        自定义 load()
-            │
-            ▼
-        loadFromRedisOrSource(key, sourceLoader)
+get(key)
+  → computeIfAbsent(key, mappingFunction())
+    → key不存在: mappingFunction.apply(key)
+      → cacheLoader.load(key)
+        → 自定义 load()
+          → loadFromRedisOrSource(key, sourceLoader)
 ```
 
 ---
