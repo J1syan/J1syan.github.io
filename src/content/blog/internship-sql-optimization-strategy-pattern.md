@@ -1,7 +1,7 @@
 ---
 title: '实习笔记：SQL 优化与策略模式重构实战'
 description: '实习期间的两个核心贡献：SQL 性能优化（2w+ms → 10ms，2000 倍提升）+ 策略模式重构（消除数百行 if-else）。包含完整排查思路、优化前后 SQL 对比、Java/Go 双语言实现。'
-pubDate: '2025-06-12'
+pubDate: '2026-06-12'
 category: '后端开发'
 tags: ['SQL', 'Java', 'Go', '性能优化', '实习']
 ---
